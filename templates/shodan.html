@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+      {% load bootstrap5 %}
+      {% bootstrap_css %}
+      {% bootstrap_javascript %}
+</head>
+<body>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    <div class="container">
+    <form method="POST">
+        {% csrf_token %}
+        <label for="query">Zadejte dotaz:</label>
+        <input type="text" class="form-control" id="query" name="query" value="{{ query|default:'' }}" required>
+        <button type="submit" class="btn btn-primary">Hledat</button>
+    </form>
+     </div>
+
+    {% if results %}
+        <h2>Výsledky:</h2>
+        <pre>{{ results|safe }}</pre>
+    {% endif %}
+
+</body>
+</html>
