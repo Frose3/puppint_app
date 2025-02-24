@@ -1,8 +1,11 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.template import loader
 import requests
 import os
+
+import osint_tools.sockpuppet
+from osint_tools import sockpuppet
 
 def index(request):
     template = loader.get_template('index.html')
@@ -27,3 +30,9 @@ def shodan(request):
         except ValueError:
             return render(request, "shodan.html", {"error": f"Shodan API vrátilo neplatnou odpověď: {response.text}"})
     return render(request, 'shodan.html')
+
+def sock(request):
+    if request.method == 'GET':
+        data = sockpuppet.generated_sock()
+        return JsonResponse(data)
+    return JsonResponse({'error' : 'Pouzijte GET metodu'}, status=400)
