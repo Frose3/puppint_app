@@ -11,15 +11,17 @@ class Tempmail:
     def create_email(self):
         url = self.api_domain + 'accounts'
         headers = {
-            'Content-Type': 'application/ld+json',
-            'Accept': 'application/ld+json'
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
         }
+
+        if self.get_domain() is None:
+            return None
+
         data = {
             "address": f"{self.login}@{self.get_domain()}",
             "password": f"{self.password}"
         }
-        if self.get_domain() is None:
-            return None
 
         response = requests.post(url, headers=headers, data=json.dumps(data))
         if response.status_code == 201:
@@ -29,7 +31,7 @@ class Tempmail:
             print("Account already exists.")
             return f"{self.login}@{self.get_domain()}"
         else:
-            return response.json()["violations"][0]["message"]
+            return response.json()["title"]
 
     def get_domain(self):
         url = self.api_domain + 'domains?page=1'

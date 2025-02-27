@@ -31,8 +31,10 @@ def shodan(request):
             return render(request, "shodan.html", {"error": f"Shodan API vrátilo neplatnou odpověď: {response.text}"})
     return render(request, 'shodan.html')
 
-def sock(request):
+def sock_view(request):
     if request.method == 'GET':
+        return render(request, "sock.html")
+    if request.method == 'POST':
         data = sockpuppet.generated_sock()
-        return JsonResponse(data)
-    return JsonResponse({'error' : 'Pouzijte GET metodu'}, status=400)
+        return render(request, "sock.html", {"sockpuppet" : data})
+    return None

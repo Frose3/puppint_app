@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sock Puppet Generator</title>
+      {% load bootstrap5 %}
+      {% bootstrap_css %}
+      {% bootstrap_javascript %}
+
+</head>
+<body class="bg-light">
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-lg">
+                    <div class="card-body text-center">
+                        <h2 class="card-title mb-4">🎭 Generátor Sock Puppeta</h2>
+
+                        <form method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary w-100">Vygenerovat Sock Puppeta</button>
+                        </form>
+
+                        {% if sockpuppet %}
+                        <div class="mt-4 text-start">
+                            <h4 class="text-primary">🔍 Vygenerované údaje:</h4>
+                            <ul class="list-group">
+                                <li class="list-group-item"><strong>Jméno:</strong> {{ sockpuppet.fullname }}</li>
+                                <li class="list-group-item"><strong>Věk:</strong> {{ sockpuppet.age }}</li>
+                                <li class="list-group-item"><strong>Email:</strong> {{ sockpuppet.email }}</li>
+                                <li class="list-group-item"><strong>Heslo:</strong> {{ sockpuppet.password }}</li>
+                                <li class="list-group-item"><strong>Biografie:</strong> {{ sockpuppet.bio }}</li>
+                            </ul>
+                            <br>
+                            <p class="text-center mt-4"> Poznámka: Na email se můžete přihlásit na stránce <a href="https://mail.tm/"></a></p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

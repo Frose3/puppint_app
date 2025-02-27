@@ -4,5 +4,5 @@ from app import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('shodan/', views.shodan, name='shodan'),
-    path('sockpuppet/', views.sock, name='sockpuppet'),
+    path('sockpuppet/', views.sock_view, name='sockpuppet'),
 ]
