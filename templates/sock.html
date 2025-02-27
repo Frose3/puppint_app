@@ -36,7 +36,9 @@
                                 <li class="list-group-item"><strong>Biografie:</strong> {{ sockpuppet.bio }}</li>
                             </ul>
                             <br>
-                            <p class="text-center mt-4"> Poznámka: Na email se můžete přihlásit na stránce <a href="https://mail.tm/"></a></p>
+                            <button href="{% url "download_sock" %}" class="btn btn-success mt-3">Stáhnout JSON</button>
+                            <br>
+                            <p class="text-center mt-4"> Poznámka: Na email se můžete přihlásit na stránce <a href="https://mail.tm/">mail.tm</a></p>
                         </div>
                         {% endif %}
                     </div>

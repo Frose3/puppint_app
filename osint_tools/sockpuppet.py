@@ -64,8 +64,13 @@ def generated_sock():
 
     login = random.choice(login_options)
     password = f"{name}{unidecode(surname)}{random.randint(0, 999)}"
-    # tm = Tempmail(login, password)
-    # email = tm.create_email()
+    tm = Tempmail(login, password)
+    email = tm.create_email()
+
+    if email == 422:
+        login = random.choice(login_options)
+        tm = Tempmail(login, password)
+        email = tm.create_email()
 
     bio_prompt = (f"Vytvoř náhodnou biografii pro osobu se jménem {name.capitalize()} {surname} s věkem {age} let. Biografie by měla být uvěřitelná. Nesmí se jednat o osobu, která"
         f" by určitým způsobem mohla být známa veřejnosti. Rovnou začni se samotnou biografií a nic více k tomu nepiš.")
@@ -88,13 +93,20 @@ def generated_sock():
     fullname = f"{name.capitalize()} {surname}"
     bio = bio_response.text
 
-    data = {
-        "fullname": fullname,
-        "age": age,
-        # "email": email,
-        "password": password,
-        "bio": bio
-    }
+    if email:
+        data = {
+            "fullname": fullname,
+            "age": age,
+            "email": email,
+            "password": password,
+            "bio": bio
+        }
+    else:
+        data = {
+            "fullname": fullname,
+            "age": age,
+            "bio": bio,
+        }
 
     return data
 

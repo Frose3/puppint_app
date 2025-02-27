@@ -9,28 +9,34 @@
   {% bootstrap_javascript %}
 </head>
 <body>
-
-<div class="container">
-<ul class="nav bg-info">
-    <li class="nav-item">
-      <a class="nav-link link-light" href="/">HOME</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link link-light" href="/admin">Admin</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link link-light" href="/shodan/">Shodan</a>
-    </li>
-    <li class="nav-item">
-    <a class="nav-link link-light" href="/sockpuppet/">Sock Puppet</a>
-    </li>
-  </ul>
-</div>
-
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">PUPPINT</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin">Admin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/shodan/">Shodan</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/sockpuppet/">Sock Puppet</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br>
 <div class="container-fluid">
-  <h1>My First Bootstrap Page</h1>
-  <p>This part is inside a .container-fluid class.</p>
-  <p>The .container-fluid class provides a full width container, spanning the entire width of the viewport.</p>
+    <div class="jumbotron text-center">
+      <h1>PUPPINT</h1>
+      <p>Vítejte!</p>
+      <p>Tento nástroj byl vytvořen pro unifikaci nástrojů OSINT a pro generaci Sock Puppeta na základě českých standardů.</p>
+    </div>
 </div>
 
 </body>

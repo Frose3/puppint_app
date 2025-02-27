@@ -1,3 +1,5 @@
+import json
+
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.template import loader
@@ -38,3 +40,8 @@ def sock_view(request):
         data = sockpuppet.generated_sock()
         return render(request, "sock.html", {"sockpuppet" : data})
     return None
+
+def download_sock(request):
+    response = HttpResponse(json.dumps(sockpuppet, indent=4), content_type='application/json')
+    response["Content-Disposition"] = 'attachment; filename="sockpuppet.json"'
+    return response

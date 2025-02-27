@@ -1,4 +1,6 @@
 import json
+from typing import Any
+import logging
 
 import requests
 
@@ -8,14 +10,14 @@ class Tempmail:
         self.password = password
         self.api_domain = api_domain
 
-    def create_email(self):
-        url = self.api_domain + 'accounts'
+    def create_email(self) -> Any:
         headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
 
         if self.get_domain() is None:
+            logging.error("No domain available.")
             return None
 
         data = {
@@ -23,20 +25,23 @@ class Tempmail:
             "password": f"{self.password}"
         }
 
-        response = requests.post(url, headers=headers, data=json.dumps(data))
+        response = requests.post(f"{self.api_domain}/accounts", headers=headers, data=json.dumps(data))
         if response.status_code == 201:
-            response = response.json()['content'].decode('utf-8')
+            response = response.json()['address']
             return response.json()['content']
         elif response.status_code == 422:
-            print("Account already exists.")
-            return f"{self.login}@{self.get_domain()}"
+            logging.debug("Account already exists.")
+            return 422
+        elif response.status_code == 500:
+            logging.error(response.json()["detail"])
+            return None
         else:
-            return response.json()["title"]
+            logging.error(response.json()["violations"][0]["message"])
+            return None
 
     def get_domain(self):
-        url = self.api_domain + 'domains?page=1'
-        response = requests.get(url)
+        response = requests.get(f"{self.api_domain}/domains?page=1")
         if response.status_code == 200:
             return response.json()["hydra:member"][0]["domain"]
         else:
-            return response.json()["violations"][0]["message"]
+            return None
