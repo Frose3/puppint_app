@@ -1,3 +1,6 @@
+import datetime
+import email
+import os
 from osint_tools.tempMail import Tempmail
 import requests
 from google import genai
@@ -61,8 +64,8 @@ def generated_sock():
 
     login = random.choice(login_options)
     password = f"{name}{unidecode(surname)}{random.randint(0, 999)}"
-    tm = Tempmail(login, password)
-    email = tm.create_email()
+    # tm = Tempmail(login, password)
+    # email = tm.create_email()
 
     bio_prompt = (f"Vytvoř náhodnou biografii pro osobu se jménem {name.capitalize()} {surname} s věkem {age} let. Biografie by měla být uvěřitelná. Nesmí se jednat o osobu, která"
         f" by určitým způsobem mohla být známa veřejnosti. Rovnou začni se samotnou biografií a nic více k tomu nepiš.")
@@ -85,9 +88,24 @@ def generated_sock():
     fullname = f"{name.capitalize()} {surname}"
     bio = bio_response.text
 
-    with open("generated_sockpuppet.txt", "a", encoding="utf-8") as f:
-        f.write(f"Jméno: {fullname}\n")
-        f.write(f"Věk: {age}\n")
-        f.write(f"Emailová adresa: {email}\n")
-        f.write(f"Heslo: {password}\n")
-        f.write(f"Biografie: {bio}\n\n")
+    data = {
+        "fullname": fullname,
+        "age": age,
+        # "email": email,
+        "password": password,
+        "bio": bio
+    }
+
+    return data
+
+    # file_path = "/puppet"
+    # file_name = f"{unidecode(name.lower())}_{unidecode(surname.lower())}.txt"
+    #
+    # with open(os.path.join(file_path, file_name), "x", encoding="utf-8") as f:
+    #     f.write(f"Jméno: {fullname}\n")
+    #     f.write(f"Narozena: {int(datetime.date.today().strftime('%Y')) - age}\n\n")
+    #     f.write(f"Věk: {age}\n\n")
+    #     f.write(f"Příhlásit se můžete na: https://mail.tm/en/\n")
+    #     # f.write(f"Emailová adresa: {email}\n")
+    #     f.write(f"Heslo: {password}\n")
+    #     f.write(f"Biografie: {bio}\n\n")
