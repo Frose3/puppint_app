@@ -1,10 +1,12 @@
 import json
 
+from django.core.serializers import serialize
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.template import loader
 import requests
 import os
+from rest_framework import serializers
 
 import osint_tools.sockpuppet
 from osint_tools import sockpuppet
@@ -38,10 +40,18 @@ def sock_view(request):
         return render(request, "sock.html")
     if request.method == 'POST':
         data = sockpuppet.generated_sock()
+        request.session['sockpuppet'] = data
         return render(request, "sock.html", {"sockpuppet" : data})
     return None
 
 def download_sock(request):
-    response = HttpResponse(json.dumps(sockpuppet, indent=4), content_type='application/json')
-    response["Content-Disposition"] = 'attachment; filename="sockpuppet.json"'
+    sock_data = request.session.get('sockpuppet')
+    if not sock_data:
+        return JsonResponse({"error": "No sock data found."}, status=400)
+    try:
+        sock_json = json.dumps(sock_data, indent=4, ensure_ascii=False)
+        response = HttpResponse(sock_json, content_type='application/json')
+        response["Content-Disposition"] = 'attachment; filename="sockpuppet.json"'
+    except Exception as e:
+        return JsonResponse({"error": f" Unexpected error: {str(e)}"}, status=500)
     return response

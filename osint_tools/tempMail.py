@@ -28,7 +28,7 @@ class Tempmail:
         response = requests.post(f"{self.api_domain}/accounts", headers=headers, data=json.dumps(data))
         if response.status_code == 201:
             response = response.json()['address']
-            return response.json()['content']
+            return response
         elif response.status_code == 422:
             logging.debug("Account already exists.")
             return 422

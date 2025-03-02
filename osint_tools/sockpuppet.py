@@ -93,7 +93,7 @@ def generated_sock():
     fullname = f"{name.capitalize()} {surname}"
     bio = bio_response.text
 
-    if email:
+    if email is type(str):
         data = {
             "fullname": fullname,
             "age": age,
