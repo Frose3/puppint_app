@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
+{% extends "index.html" %}
+
 <head>
     <meta charset="UTF-8">
     <title>Shodan</title>
@@ -11,6 +14,7 @@
     {% if error %}
         <p style="color: red;">{{ error }}</p>
     {% endif %}
+
 
     <div class="container">
     <form method="POST">
@@ -24,7 +28,7 @@
     {% if results %}
         <h2>Výsledky:</h2>
         <pre>{{ results|safe }}</pre>
-    {% endif %}
+    {%  endif %}
 
 </body>
 </html>
