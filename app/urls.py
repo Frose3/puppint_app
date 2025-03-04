@@ -9,4 +9,5 @@ urlpatterns = [
     path('shodan/', views.shodan, name='shodan'),
     path('sockpuppet/', views.sock_view, name='sockpuppet'),
     path('sockpuppet/download', views.download_sock, name='download_sock'),
+    path('profile/', views.profile_view, name='profile'),
 ]

@@ -9,6 +9,7 @@ from google.genai import types
 # from PIL import Image
 from io import BytesIO
 import random
+from app.models import UserProfile
 
 def custom_sock():
     name = input("Zadejte jméno: ")
@@ -42,7 +43,11 @@ def generated_sock():
         print("Wordlist file not found.")
         return
 
-    GEMINI_API_KEY = "AIzaSyCx3LZGg8pJep8NTS-tQbdzsVdy8MmvMC0"
+    profile = UserProfile.objects.first()
+    gemini_api_key = profile.gemini_api_key if profile and profile.gemini_api_key else ""
+
+
+    GEMINI_API_KEY = gemini_api_key
 
     client = genai.Client(api_key=GEMINI_API_KEY)
     surname_prompt = (f"Jednoslovně mi napiš dobré příjmení. Chci aby výsledek promptu byl čistě jedno příjmení, které tě napadne ke jménu {name.capitalize()}. Je to {gender}"

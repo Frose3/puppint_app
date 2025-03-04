@@ -3,7 +3,7 @@ import json
 from django.contrib.auth.models import User
 from django.core.serializers import serialize
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import loader
 import requests
 import os
@@ -13,6 +13,8 @@ from django.views import View
 from rest_framework import serializers
 
 import osint_tools.sockpuppet
+from app.forms import UserProfileForm
+from app.models import UserProfile
 from osint_tools import sockpuppet
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.forms import UserCreationForm
@@ -69,3 +71,17 @@ def download_sock(request):
     except Exception as e:
         return JsonResponse({"error": f" Unexpected error: {str(e)}"}, status=500)
     return response
+
+#TODO: Vyřešit následující error:
+# UnboundLocalError: cannot access local variable 'form' where it is not associated with a value
+def profile_view(request):
+    profile, created = UserProfile.objects.get_or_create(id=1)
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect("profile")
+    else:
+        form = UserProfileForm(instance=profile)
+
+    return render(request, "profile.html", {"form": form})
