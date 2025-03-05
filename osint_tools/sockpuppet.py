@@ -1,6 +1,7 @@
 import datetime
 import email
 import os
+
 from osint_tools.tempMail import Tempmail
 import requests
 from google import genai
@@ -31,7 +32,7 @@ def custom_sock():
     f.close()
 
 
-def generated_sock():
+def generated_sock(user):
 
     try:
         with open("osint_tools/filtered_wordlist_names.txt", "r", encoding="utf-8") as f:
@@ -43,13 +44,11 @@ def generated_sock():
         print("Wordlist file not found.")
         return
 
-    profile = UserProfile.objects.first()
+    profile = UserProfile.objects.get(user=user)
     gemini_api_key = profile.gemini_api_key if profile and profile.gemini_api_key else ""
 
 
-    GEMINI_API_KEY = gemini_api_key
-
-    client = genai.Client(api_key=GEMINI_API_KEY)
+    client = genai.Client(api_key=gemini_api_key)
     surname_prompt = (f"Jednoslovně mi napiš dobré příjmení. Chci aby výsledek promptu byl čistě jedno příjmení, které tě napadne ke jménu {name.capitalize()}. Je to {gender}"
         f"Po tom co vybereš přijímení, tak chci, aby jsi nepsal za příjmením tečku.")
     surname_response = client.models.generate_content(

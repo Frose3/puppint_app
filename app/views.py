@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.serializers import serialize
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
@@ -55,7 +56,7 @@ def sock_view(request):
     if request.method == 'GET':
         return render(request, "sock.html")
     if request.method == 'POST':
-        data = sockpuppet.generated_sock()
+        data = sockpuppet.generated_sock(request.user)
         request.session['sockpuppet'] = data
         return render(request, "sock.html", {"sockpuppet" : data})
     return None
@@ -72,10 +73,9 @@ def download_sock(request):
         return JsonResponse({"error": f" Unexpected error: {str(e)}"}, status=500)
     return response
 
-#TODO: Vyřešit následující error:
-# UnboundLocalError: cannot access local variable 'form' where it is not associated with a value
+@login_required
 def profile_view(request):
-    profile, created = UserProfile.objects.get_or_create(id=1)
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=profile)
         if form.is_valid():

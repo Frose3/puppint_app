@@ -6,5 +6,5 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ['gemini_api_key']
         widgets = {
-            "gemeni_api_key": forms.TextInput(attrs={"class": "form-control", "placeholder": "Zadejte svůj Gemini API klíč"}),
+            "gemini_api_key": forms.TextInput(attrs={"class": "form-control", "placeholder": "Zadejte svůj Gemini API klíč"}),
         }
