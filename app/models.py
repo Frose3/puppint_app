@@ -8,3 +8,13 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"API Keys for {self.user.username}"
+
+class SockPuppet(models.Model):
+    name = models.CharField(max_length=255)
+    age = models.IntegerField()
+    email = models.EmailField(blank=True)
+    password = models.CharField(max_length=255, blank=True)
+    bio = models.TextField()
+
+    def __str__(self):
+        return self.name

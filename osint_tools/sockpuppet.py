@@ -10,7 +10,9 @@ from google.genai import types
 # from PIL import Image
 from io import BytesIO
 import random
-from app.models import UserProfile
+from app.models import UserProfile, SockPuppet
+import configparser
+from django.db import models
 
 def custom_sock():
     name = input("Zadejte jméno: ")
@@ -44,8 +46,17 @@ def generated_sock(user):
         print("Wordlist file not found.")
         return
 
-    profile = UserProfile.objects.get(user=user)
-    gemini_api_key = profile.gemini_api_key if profile and profile.gemini_api_key else ""
+    config = configparser.ConfigParser()
+    config.read("api.env")
+    gemini_api_key = config.get("GEMINI", "GEMINI_API_KEY")
+
+
+
+
+# V případě účtu
+#     profile = UserProfile.objects.get(user=user)
+#     gemini_api_key = profile.gemini_api_key if profile and profile.gemini_api_key else ""
+
 
 
     client = genai.Client(api_key=gemini_api_key)
@@ -96,6 +107,7 @@ def generated_sock(user):
 
     fullname = f"{name.capitalize()} {surname}"
     bio = bio_response.text
+    puppet = SockPuppet()
 
     if email is type(str):
         data = {
@@ -105,13 +117,22 @@ def generated_sock(user):
             "password": password,
             "bio": bio
         }
+        puppet.name = fullname
+        puppet.age = age
+        puppet.email = email
+        puppet.password = password
+        puppet.bio = bio
+        puppet.save()
     else:
         data = {
             "fullname": fullname,
             "age": age,
             "bio": bio,
         }
-
+        puppet.name = fullname
+        puppet.age = age
+        puppet.bio = bio
+        puppet.save()
     return data
 
     # file_path = "/puppet"
