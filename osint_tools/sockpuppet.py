@@ -34,8 +34,8 @@ def custom_sock():
     f.close()
 
 
-def generated_sock(user):
-
+# def generated_sock(user):
+def generated_sock():
     try:
         with open("osint_tools/filtered_wordlist_names.txt", "r", encoding="utf-8") as f:
             names = f.readlines()

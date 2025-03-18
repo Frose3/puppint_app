@@ -32,11 +32,11 @@
     </div>
 </nav>
 <br>
-<div class="container-fluid">
-    <div class="jumbotron text-center">
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
       <form method="post">
           {% csrf_token %}
-          {{ form }}
+          {% bootstrap_form form %}
           <button class="btn btn-primary" type="submit">Log In</button>
         </form>
     </div>

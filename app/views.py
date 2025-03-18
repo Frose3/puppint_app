@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.serializers import serialize
@@ -13,10 +14,9 @@ from django.urls import reverse
 from django.views import View
 from rest_framework import serializers
 
-import osint_tools.sockpuppet
-from app.forms import UserProfileForm
+from app.forms import UserProfileForm, IPStackForm, HunterQueryForm
 from app.models import UserProfile
-from osint_tools import sockpuppet
+from osint_tools import sockpuppet, ipstack, hunter
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
@@ -56,8 +56,9 @@ def sock_view(request):
     if request.method == 'GET':
         return render(request, "sock.html")
     if request.method == 'POST':
-        data = sockpuppet.generated_sock(request.user)
-        request.session['sockpuppet'] = data
+        # data = sockpuppet.generated_sock(request.user)
+        data = sockpuppet.generated_sock()
+        # request.session['sockpuppet'] = data
         return render(request, "sock.html", {"sockpuppet" : data})
     return None
 
@@ -73,15 +74,35 @@ def download_sock(request):
         return JsonResponse({"error": f" Unexpected error: {str(e)}"}, status=500)
     return response
 
-@login_required
-def profile_view(request):
-    profile, created = UserProfile.objects.get_or_create(user=request.user)
+def ipstack_view(request):
+    if request.method == 'GET':
+        form = IPStackForm()
+        return render(request, "ipstack.html", {"form": form})
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=profile)
+        form = IPStackForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect("profile")
-    else:
-        form = UserProfileForm(instance=profile)
+            data = ipstack.ipstack(form.data['ip_address'])
+            return render(request, "ipstack.html", {"ipstack_info": data})
 
-    return render(request, "profile.html", {"form": form})
+def hunter_view(request):
+    if request.method == 'GET':
+        form = HunterQueryForm()
+        return render(request, "hunter.html", {"form": form})
+    if request.method == 'POST':
+        form = HunterQueryForm(request.POST)
+        if form.is_valid():
+            data = hunter.hunter(form.data['query'])
+            return render(request, "hunter.html", {"hunter_data": data})
+
+# @login_required
+# def profile_view(request):
+#     profile, created = UserProfile.objects.get_or_create(user=request.user)
+#     if request.method == 'POST':
+#         form = UserProfileForm(request.POST, instance=profile)
+#         if form.is_valid():
+#             form.save()
+#             return redirect("profile")
+#     else:
+#         form = UserProfileForm(instance=profile)
+#
+#     return render(request, "profile.html", {"form": form})

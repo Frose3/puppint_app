@@ -10,6 +10,12 @@
       {% bootstrap_css %}
       {% bootstrap_javascript %}
 
+    <style>
+        li{
+            background-color: #282828
+        }
+    </style>
+
 </head>
 <body class="bg-light">
     {% if error %}
@@ -22,7 +28,7 @@
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card shadow-lg">
+                <div class="card shadow-lg" style="background-color: #282828">
                     <div class="card-body text-center">
                         <h2 class="card-title mb-4">🎭 Generátor Sock Puppeta</h2>
 
@@ -34,7 +40,7 @@
                         {% if sockpuppet %}
                         <div class="mt-4 text-start">
                             <h4 class="text-primary">🔍 Vygenerované údaje:</h4>
-                            <ul class="list-group">
+                            <ul class="list-group" >
                                 <li class="list-group-item"><strong>Jméno:</strong> {{ sockpuppet.fullname }}</li>
                                 <li class="list-group-item"><strong>Věk:</strong> {{ sockpuppet.age }}</li>
                                 <li class="list-group-item"><strong>Email:</strong> {{ sockpuppet.email }}</li>

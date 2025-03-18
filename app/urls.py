@@ -1,3 +1,4 @@
+from django.contrib.auth.views import LoginView
 from django.urls import path
 from app import views
 from django.views.generic.base import TemplateView
@@ -9,5 +10,7 @@ urlpatterns = [
     path('shodan/', views.shodan, name='shodan'),
     path('sockpuppet/', views.sock_view, name='sockpuppet'),
     path('sockpuppet/download', views.download_sock, name='download_sock'),
-    path('profile/', views.profile_view, name='profile'),
+    # path('profile/', views.profile_view, name='profile'),
+    path('ipstack/', views.ipstack_view, name='ipstack'),
+    path('hunter/', views.hunter_view, name='hunter'),
 ]
