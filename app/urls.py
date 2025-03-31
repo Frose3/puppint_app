@@ -12,5 +12,6 @@ urlpatterns = [
     path('sockpuppet/download', views.download_sock, name='download_sock'),
     # path('profile/', views.profile_view, name='profile'),
     path('ipstack/', views.ipstack_view, name='ipstack'),
-    path('hunter/', views.hunter_view, name='hunter'),
+    path('reverse/', views.reverse_view, name='reverse'),
+    path('fullhunt/', views.fullhunt_view, name='fullhunt'),
 ]

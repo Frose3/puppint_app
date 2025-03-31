@@ -24,6 +24,10 @@ def print_banner():
 
 🔹 OSINT nástroj pro generování sock puppet identit a unifikaci OSINT nástrojů
 🔹 Autor: [Filip Růžička]
+
+🔹Tip: Nástroj vypnete zkratkou: Ctrl+C
+
+!!!HAPPY HACKING!!!
 """
     print(banner)
 

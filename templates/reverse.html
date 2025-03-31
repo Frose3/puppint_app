@@ -1,0 +1,77 @@
+{% extends 'index.html' %}
+{% block auth %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-lg" style="background-color: #282828">
+                    <div class="card-body text-center">
+                        <h2 class="card-title mb-4">🔍 Google Reverse Image Search</h2>
+
+                        {% if not rev_img or error%}
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label" for="ip_address">Zadejte adresu obrázku:</label>
+                                {{ form.img_url }}
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Execute</button>
+                        </form>
+                        {% endif %}
+
+                        {% if rev_img %}
+                        <div class="mt-4 text-start">
+                            <h4 class="text-primary">Výsledky:</h4>
+                            <div class="row">
+                                {% for item in rev_img %}
+                                    <div class="col-md-6">
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    {% if item.favicon %}
+                                                        <img src="{{ item.favicon }}" alt="Favicon" width="16" height="16" class="me-1">
+                                                    {% endif %}
+                                                    <a href="{{ item.link }}" target="_blank" class="text-decoration-none">
+                                                        {{ item.title }}
+                                                    </a>
+                                                </h5>
+                                                <p class="card-text">
+                                                    <strong>Zdroj:</strong> {{ item.source }} <br>
+                                                    <strong>Zobrazovaný odkaz:</strong> {{ item.displayed_link }}
+                                                </p>
+                                                <p class="card-text">
+                                                    {{ item.snippet }}
+                                                </p>
+                                                <a href="{{ item.redirect_link }}" class="btn btn-primary btn-sm" target="_blank">
+                                                    🔗 Otevřít stránku
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if knowledge %}
+                        <div class="col-md-6 mt-4 text-start">
+                            <h4 class="text-primary">🔍 Výsledky zjištění:</h4>
+                            <ul class="list-group">
+                                {% for value in knowledge %}
+                                    <li class="list-group-item"><strong>Výsledek: </strong>{{ value }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        {% if error %}
+                        <div class="mt-4 text-start">
+                            <h4 class="text-danger">{{ error }}</h4>
+                        </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

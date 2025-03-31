@@ -1,6 +1,6 @@
 {% extends "index.html" %}
 {% block auth %}
-    <title>HUNTER</title>
+    <title>FULLHUNT</title>
     <style>
         label{
             font-size: 1.2em;
@@ -12,22 +12,22 @@
             <div class="col-md-6">
                 <div class="card shadow-lg">
                     <div class="card-body text-center">
-                        <h2 class="card-title mb-4">🎭 IOT Hunter Search Engine</h2>
+                        <h2 class="card-title mb-4"> IOT Fullhunt Search Engine</h2>
                         <form method="POST">
                             {% csrf_token %}
                             <div class="mb-3">
-                            <label class="form-label">Zadejte Query:</label>
+                            <label class="form-label">Zadejte domému:</label>
                             {{ form.query }}
                             </div>
                             <button type="submit" class="btn btn-primary">EXECUTE</button>
                         </form>
                     </div>
 
-                    {% if ipstack_info %}
+                    {% if fullhunt_data %}
                         <div class="mt-4 text-start">
                             <h4 class="text-primary">🔍 Zjištěné údaje:</h4>
                             <ul class="list-group">
-                                <li class="list-group-item">{{ hunter_data }}</li>
+                                <li class="list-group-item">{{ fullhunt_data }}</li>
                             </ul>
                             <br>
                             <br>

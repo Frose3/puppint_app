@@ -9,15 +9,27 @@
   {% bootstrap_javascript %}
 
     <style>
-    :root {
-            color-scheme: light dark;
+    body {
+            background-color: #1E1E1E;
+            color: #E0E0E0;
         }
-
-        body{
+        .navbar {
             background-color: #121212;
         }
-        h1,h2,h3, p{
-            color: whitesmoke;
+        .navbar-brand, .nav-link {
+            color: #E0E0E0;
+            transition: 0.3s;
+        }
+        .nav-link:hover {
+            color: #FFD700;
+            text-decoration: underline;
+        }
+        .card {
+            background-color: #222;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
     </style>
 
@@ -45,7 +57,10 @@
                     <a class="nav-link" href="/ipstack/">IPSTACK</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/hunter/">Hunter</a>
+                    <a class="nav-link" href="/fullhunt/">Hunter</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/reverse/">Image Reverse Search</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/sockpuppet/">Sock Puppet</a>
@@ -77,6 +92,39 @@
       <h1>PUPPINT</h1>
       <p>Vítejte! {{ user.username }}</p>
       <p>Tento nástroj byl vytvořen pro unifikaci nástrojů OSINT a pro generaci Sock Puppeta na základě českých standardů.</p>
+      <br>
+    </div>
+    <div class="container mt-5 pt-5">
+        <h1 class="text-center mb-4">Dostupné OSINT Nástroje</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <h3 class="card-title">IPSTACK</h3>
+                    <a href="/ipstack/" class="stretched-link"></a>
+                    <p class="card-text">IPSTACK je nástroj pro skenování veřejných IP adres a získávání informací o geolokaci.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <h3 class="card-title">Sock Puppet</h3>
+                    <a href="/sockpuppet/" class="stretched-link"></a>
+                    <p class="card-text">Nástroj pro automatizované vytváření sock puppet účtů s generováním profilových fotek.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+            <div class="card p-3">
+                <h3 class="card-title">Google Image Reverse Search</h3>
+                <a href="/reverse/" class="stretched-link"></a>
+                <p class="card-text">Nástroj umožňující Google Reverse Image Search při poskytnutí URL obrázku.</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h3 class="card-title">Maltego</h3>
+                <p class="card-text">Vizualizační nástroj pro OSINT analýzu a propojení dat z různých zdrojů.</p>
+            </div>
+        </div>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -99,7 +147,7 @@
                     <a class="nav-link" href="/ipstack/">IPSTACK</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/hunter/">Hunter</a>
+                    <a class="nav-link" href="/fullhunt/">Hunter</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url "sockpuppet" %}">Sock Puppet</a>

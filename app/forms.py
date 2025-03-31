@@ -14,7 +14,17 @@ class IPStackForm(forms.Form):
     class Meta:
         fields = ['ip_address']
 
-class HunterQueryForm(forms.Form):
+class ReverseForm(forms.Form):
+    img_url = forms.CharField(max_length=255, label="Reverse image")
+    class Meta:
+        fields = ['img_url']
+
+class FullhuntQueryForm(forms.Form):
     query = forms.CharField(max_length=100, label="Hunter query")
     class Meta:
         fields = ['query']
+
+class ShodanForm(forms.Form):
+    service = forms.CharField(max_length=100, label="Service")
+    class Meta:
+        fields = ['service']

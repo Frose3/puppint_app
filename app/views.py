@@ -14,9 +14,9 @@ from django.urls import reverse
 from django.views import View
 from rest_framework import serializers
 
-from app.forms import UserProfileForm, IPStackForm, HunterQueryForm
+from app.forms import UserProfileForm, IPStackForm, FullhuntQueryForm, ReverseForm, ShodanForm
 from app.models import UserProfile
-from osint_tools import sockpuppet, ipstack, hunter
+from osint_tools import sockpuppet, ipstack, fullhunt, reverse, shodan_api
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
@@ -34,23 +34,17 @@ def index(request):
 
 
 SHODAN_API_KEY = os.getenv("SHODAN_API_KEY")
-def shodan(request):
-    if request.method == 'POST':
-        query = request.POST.get('query')
-        if not query:
-            return render(request, 'shodan.html', {'error': 'Please enter a query!'})
+def shodan_view(request):
+    if request.method == "GET":
+        form = ShodanForm()
+        return render(request, "shodan.html", {"form": form})
+    if request.method == "POST":
+        form = ShodanForm(request.POST)
+        if form.is_valid():
+            data = shodan_api.shodan_search(form.data['service'])
+            return render(request, "shodan.html", {"shodan_data": data})
 
-        url = f"https://api.shodan.io/shodan/host/search?key={SHODAN_API_KEY}&query={query}&facets=country"
-        try:
-            response = requests.get(url)
-            print("Raw response:", response.text)
-            data = response.json()
-            return render(request, 'shodan.html', {'data': data, 'query': query})
-        except requests.exceptions.RequestException as e:
-            return render(request, "shodan.html", {"error": f"Chyba při komunikaci s API: {str(e)}"})
-        except ValueError:
-            return render(request, "shodan.html", {"error": f"Shodan API vrátilo neplatnou odpověď: {response.text}"})
-    return render(request, 'shodan.html')
+        # TODO: Dodělat Shodan
 
 def sock_view(request):
     if request.method == 'GET':
@@ -84,15 +78,30 @@ def ipstack_view(request):
             data = ipstack.ipstack(form.data['ip_address'])
             return render(request, "ipstack.html", {"ipstack_info": data})
 
-def hunter_view(request):
+def reverse_view(request):
     if request.method == 'GET':
-        form = HunterQueryForm()
-        return render(request, "hunter.html", {"form": form})
+        form = ReverseForm()
+        return render(request, "reverse.html", {"form": form})
     if request.method == 'POST':
-        form = HunterQueryForm(request.POST)
+        form = ReverseForm(request.POST)
         if form.is_valid():
-            data = hunter.hunter(form.data['query'])
-            return render(request, "hunter.html", {"hunter_data": data})
+            data = reverse.reverse_image(form.data['img_url'])
+            if data.__contains__("image_results") and data.__contains__("knowledge_graph"):
+                return render(request, "reverse.html", {"rev_img": data["image_results"], "knowledge": data["knowledge_graph"]})
+            elif data.__contains__("image_results") and not data.__contains__("knowledge_graph"):
+                return render(request, "reverse.html",{"rev_img": data["image_results"]})
+            else:
+                return render(request, "reverse.html", {"error": data["error"]})
+
+def fullhunt_view(request):
+    if request.method == 'GET':
+        form = FullhuntQueryForm()
+        return render(request, "fullhunt.html", {"form": form})
+    if request.method == 'POST':
+        form = FullhuntQueryForm(request.POST)
+        if form.is_valid():
+            data = fullhunt.fullhunt(form.data['query'])
+            return render(request, "fullhunt.html", {"fullhunt_data": data})
 
 # @login_required
 # def profile_view(request):

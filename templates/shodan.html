@@ -1,6 +1,6 @@
 {% extends "index.html" %}
 {% block auth %}
-    <title>IPSTACK</title>
+    <title>Shodan</title>
     <style>
         label{
             font-size: 1.2em;
@@ -12,12 +12,12 @@
             <div class="col-md-6">
                 <div class="card shadow-lg">
                     <div class="card-body text-center">
-                        <h2 class="card-title mb-4">🎭 IP Scanner</h2>
+                        <h2 class="card-title mb-4">🎭 Shodan Search Engine</h2>
                         <form method="POST">
                             {% csrf_token %}
                             <div class="mb-3">
-                            <label class="form-label" for="ip_address">Zadejte IP adresu:</label>
-                            {{ form.ip_address }}
+                            <label class="form-label" for="ip_address">Zadejte službu:</label>
+                            {{ form.service }}
                             </div>
                             <button type="submit" class="btn btn-primary">EXECUTE</button>
                         </form>
