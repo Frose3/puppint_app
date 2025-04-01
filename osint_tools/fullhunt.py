@@ -14,4 +14,4 @@ def fullhunt(user_query):
 
     response = requests.get(f"https://fullhunt.io/api/v1/domain/{user_query}/details", headers=headers)
 
-    return response.json()['text']
+    return response.json()['hosts']

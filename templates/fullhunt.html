@@ -1,41 +1,100 @@
 {% extends "index.html" %}
+{% load rest_framework %}
 {% block auth %}
-    <title>FULLHUNT</title>
     <style>
-        label{
+        label {
             font-size: 1.2em;
+        }
+        .result-card {
+            margin-top: 20px;
+        }
+        .list-group-item {
+            font-size: 1em;
+             color: #E0E0E0;
+        }
+        li{
+            background-color: #282828 !important;
         }
     </style>
 
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card shadow-lg">
+                <div class="card shadow-lg border-0">
                     <div class="card-body text-center">
-                        <h2 class="card-title mb-4"> IOT Fullhunt Search Engine</h2>
+                        <h2 class="card-title mb-4 text-primary">🔮 IOT FullHunt Search Engine</h2>
+                        {% if not fullhunt_data %}
                         <form method="POST">
                             {% csrf_token %}
                             <div class="mb-3">
-                            <label class="form-label">Zadejte domému:</label>
-                            {{ form.query }}
+                                <label class="form-label">Zadejte doménu:</label>
+                                {{ form.query|add_class:"form-control"}}
                             </div>
-                            <button type="submit" class="btn btn-primary">EXECUTE</button>
+                            <button type="submit" class="btn btn-primary">Vyhledat</button>
                         </form>
-                    </div>
-
-                    {% if fullhunt_data %}
-                        <div class="mt-4 text-start">
-                            <h4 class="text-primary">🔍 Zjištěné údaje:</h4>
-                            <ul class="list-group">
-                                <li class="list-group-item">{{ fullhunt_data }}</li>
-                            </ul>
-                            <br>
-                            <br>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
+
+        {% if fullhunt_data %}
+    <div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-lg border-0 result-card">
+            <div class="card-body">
+                <h4 class="text-primary mb-3">🔮 Zjištěné údaje:</h4>
+                <ul class="list-group list-group-flush">
+                    {% for item in fullhunt_data %}
+                        <li class="list-group-item">
+                            <h4><strong>Hostitel:</strong><span class="text-danger"> {{ item.host }}</span></h4>
+                            <strong>Doména:</strong> {{ item.domain }}<br>
+                            <strong>IP adresa:</strong> {{ item.ip_address }}<br>
+                            <strong>Stav HTTP:</strong> {{ item.http_status_code }}<br>
+                            <strong>Titulek stránky:</strong> {{ item.http_title }}<br>
+                            <strong>Porty:</strong> {{ item.network_ports|join:", " }}<br>
+                            <strong>Tagy:</strong> {{ item.tags|join:", " }}<br>
+
+                            <hr>
+
+                            <h5 class="text-secondary">DNS informace:</h5>
+                            <strong>DNS Záznamy (A):</strong> {{ item.dns.a|join:", " }}<br>
+                            <strong>DNS Záznamy (AAAA):</strong> {{ item.dns.aaaa|join:", " }}<br>
+                            <strong>CNAME:</strong> {{ item.dns.cname|join:", " }}<br>
+                            <strong>PTR:</strong> {{ item.dns.ptr|join:", " }}<br>
+
+{#                            <hr>#}
+
+{#                            <h5 class="text-secondary">Metadata certifikátu:</h5>#}
+{#                            <strong>Emailové adresy:</strong> {{ item.cert_object.email_addresses|default:"Není k dispozici" }}<br>#}
+{#                            <strong>MD5 Fingerprint:</strong> {{ item.cert_object.md5_fingerprint }}<br>#}
+{#                            <strong>SHA1 Fingerprint:</strong> {{ item.cert_object.sha1_fingerprint }}<br>#}
+{#                            <strong>SHA256 Fingerprint:</strong> {{ item.cert_object.sha256_fingerprint }}<br>#}
+{#                            <strong>Platnost od:</strong> {{ item.cert_object.not_before }}<br>#}
+{#                            <strong>Platnost do:</strong> {{ item.cert_object.not_after }}<br>#}
+{#                            <strong>Issuer Common Name:</strong> {{ item.cert_object.issuer_common_name }}<br>#}
+{#                            <strong>Issuer Organization:</strong> {{ item.cert_object.issuer_organization }}<br>#}
+{#                            <strong>Subject Locality:</strong> {{ item.cert_object.subject_locality }}<br>#}
+
+                            <hr>
+
+                            <h5 class="text-secondary">Informace o síti:</h5>
+                            <strong>ASN:</strong> {{ item.ip_metadata.asn }}<br>
+                            <strong>ISP:</strong> {{ item.ip_metadata.isp }}<br>
+                            <strong>Organizace:</strong> {{ item.ip_metadata.organization }}<br>
+                            <strong>Město:</strong> {{ item.ip_metadata.city_name }}<br>
+                            <strong>Země:</strong> {{ item.ip_metadata.country_name }}<br>
+                            <strong>Region:</strong> {{ item.ip_metadata.region }}<br>
+                            <strong>PSČ:</strong> {{ item.ip_metadata.postal_code }}<br>
+                            <strong>Latitude:</strong> {{ item.ip_metadata.location_latitude }}<br>
+                            <strong>Longitude:</strong> {{ item.ip_metadata.location_longitude }}<br>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
     {% endif %}
 {% endblock %}

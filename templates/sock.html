@@ -2,28 +2,17 @@
 <html lang="en">
 
 {% extends "index.html" %}
-
-<head>
-    <meta charset="UTF-8">
-    <title>Sock Puppet Generator</title>
-      {% load bootstrap5 %}
-      {% bootstrap_css %}
-      {% bootstrap_javascript %}
-
-    <style>
-        li{
-            background-color: #282828
+<style>
+    .list-group-item {
+            font-size: 1em;
+             color: #E0E0E0;
         }
-    </style>
-
-</head>
-<body class="bg-light">
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
-
+    li{
+            background-color: #282828 !important;
+            color: #E0E0E0;
+    }
+</style>
 {% block auth %}
-{#{% if user.userprofile.gemini_api_key %}#}
 
     <div class="container py-5">
         <div class="row justify-content-center">
@@ -39,7 +28,7 @@
 
                         {% if sockpuppet %}
                         <div class="mt-4 text-start">
-                            <h4 class="text-primary">🔍 Vygenerované údaje:</h4>
+                            <h4 class="text-primary">👤 Vygenerované údaje:</h4>
                             <ul class="list-group">
                                 <li class="list-group-item"><strong>Jméno:</strong> {{ sockpuppet.fullname }}</li>
                                 <li class="list-group-item"><strong>Věk:</strong> {{ sockpuppet.age }}</li>

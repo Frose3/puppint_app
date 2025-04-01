@@ -1,5 +1,16 @@
 {% extends 'index.html' %}
+{% load rest_framework %}
 {% block auth %}
+<style>
+    .list-group-item {
+            font-size: 1em;
+             color: #E0E0E0;
+        }
+    li{
+            background-color: #282828 !important;
+            color: #E0E0E0;
+    }
+</style>
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -12,7 +23,7 @@
                             {% csrf_token %}
                             <div class="mb-3">
                                 <label class="form-label" for="ip_address">Zadejte adresu obrázku:</label>
-                                {{ form.img_url }}
+                                {{ form.img_url|add_class:"form-control" }}
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Execute</button>
                         </form>

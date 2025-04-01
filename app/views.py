@@ -16,7 +16,7 @@ from rest_framework import serializers
 
 from app.forms import UserProfileForm, IPStackForm, FullhuntQueryForm, ReverseForm, ShodanForm
 from app.models import UserProfile
-from osint_tools import sockpuppet, ipstack, fullhunt, reverse, shodan_api
+from osint_tools import sockpuppet, ipstack, fullhunt, reverse
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
@@ -34,17 +34,6 @@ def index(request):
 
 
 SHODAN_API_KEY = os.getenv("SHODAN_API_KEY")
-def shodan_view(request):
-    if request.method == "GET":
-        form = ShodanForm()
-        return render(request, "shodan.html", {"form": form})
-    if request.method == "POST":
-        form = ShodanForm(request.POST)
-        if form.is_valid():
-            data = shodan_api.shodan_search(form.data['service'])
-            return render(request, "shodan.html", {"shodan_data": data})
-
-        # TODO: Dodělat Shodan
 
 def sock_view(request):
     if request.method == 'GET':
@@ -86,9 +75,9 @@ def reverse_view(request):
         form = ReverseForm(request.POST)
         if form.is_valid():
             data = reverse.reverse_image(form.data['img_url'])
-            if data.__contains__("image_results") and data.__contains__("knowledge_graph"):
+            if data.get("image_results") and data.get("knowledge_graph"):
                 return render(request, "reverse.html", {"rev_img": data["image_results"], "knowledge": data["knowledge_graph"]})
-            elif data.__contains__("image_results") and not data.__contains__("knowledge_graph"):
+            elif data.get("image_results") and not data.get("knowledge_graph"):
                 return render(request, "reverse.html",{"rev_img": data["image_results"]})
             else:
                 return render(request, "reverse.html", {"error": data["error"]})

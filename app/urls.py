@@ -7,7 +7,7 @@ from .views import SignUp
 urlpatterns = [
     path('', TemplateView.as_view(template_name="index.html"), name='index'),
     path('signup/', SignUp.as_view(), name='signup'),
-    path('shodan/', views.shodan, name='shodan'),
+    path('shodan/', views.shodan_view, name='shodan'),
     path('sockpuppet/', views.sock_view, name='sockpuppet'),
     path('sockpuppet/download', views.download_sock, name='download_sock'),
     # path('profile/', views.profile_view, name='profile'),
