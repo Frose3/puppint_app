@@ -3,14 +3,16 @@
 
 {% extends "index.html" %}
 <style>
-    .list-group-item {
+    label {
+            font-size: 1.2em;
+        }
+        .list-group-item {
             font-size: 1em;
              color: #E0E0E0;
         }
-    li{
+        li{
             background-color: #282828 !important;
-            color: #E0E0E0;
-    }
+        }
 </style>
 {% block auth %}
 
@@ -32,6 +34,9 @@
                             <ul class="list-group">
                                 <li class="list-group-item"><strong>Jméno:</strong> {{ sockpuppet.fullname }}</li>
                                 <li class="list-group-item"><strong>Věk:</strong> {{ sockpuppet.age }}</li>
+                                <li class="list-group-item"><strong>Věk:</strong> {{ sockpuppet.date_of_birth }}</li>
+                                <li class="list-group-item"><strong>Město:</strong> {{ sockpuppet.city }}</li>
+                                <li class="list-group-item"><strong>Ulice:</strong> {{ sockpuppet.street }}</li>
                                 <li class="list-group-item"><strong>Email:</strong> {{ sockpuppet.email }}</li>
                                 <li class="list-group-item"><strong>Heslo:</strong> {{ sockpuppet.password }}</li>
                                 <li class="list-group-item"><strong>Biografie:</strong> {{ sockpuppet.bio }}</li>

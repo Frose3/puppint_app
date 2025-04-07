@@ -12,6 +12,9 @@ class UserProfile(models.Model):
 class SockPuppet(models.Model):
     name = models.CharField(max_length=255)
     age = models.IntegerField()
+    date_of_birth = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=255, blank=True, null=True)
+    street_adress = models.CharField(max_length=255, blank=True, null=True)
     email = models.EmailField(blank=True)
     password = models.CharField(max_length=255, blank=True)
     bio = models.TextField()

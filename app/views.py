@@ -21,7 +21,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-
+from django.core.serializers.json import DjangoJSONEncoder
 
 class SignUp(CreateView):
     form_class = UserCreationForm
@@ -32,16 +32,13 @@ def index(request):
     template = loader.get_template('index.html')
     return HttpResponse(template.render())
 
-
-SHODAN_API_KEY = os.getenv("SHODAN_API_KEY")
-
 def sock_view(request):
     if request.method == 'GET':
         return render(request, "sock.html")
     if request.method == 'POST':
         # data = sockpuppet.generated_sock(request.user)
         data = sockpuppet.generated_sock()
-        # request.session['sockpuppet'] = data
+        request.session['sockpuppet'] = data
         return render(request, "sock.html", {"sockpuppet" : data})
     return None
 
@@ -50,7 +47,7 @@ def download_sock(request):
     if not sock_data:
         return JsonResponse({"error": "No sock data found."}, status=400)
     try:
-        sock_json = json.dumps(sock_data, indent=4, ensure_ascii=False)
+        sock_json = json.dumps(sock_data, indent=4, ensure_ascii=False, cls=DjangoJSONEncoder)
         response = HttpResponse(sock_json, content_type='application/json')
         response["Content-Disposition"] = 'attachment; filename="sockpuppet.json"'
     except Exception as e:

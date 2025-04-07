@@ -2,6 +2,8 @@ import datetime
 import email
 import os
 
+from pyasn1_modules.rfc2459 import street_address
+
 from osint_tools.tempMail import Tempmail
 import requests
 from google import genai
@@ -14,27 +16,7 @@ from app.models import UserProfile, SockPuppet
 import configparser
 from django.db import models
 
-def custom_sock():
-    name = input("Zadejte jméno: ")
-    surname = input("Zadejte přijmení: ")
-    age = input("Zadejte věk: ")
-    email = input("Zadejte váš email: ")
-    pw = input("Zadejte heslo: ")
-    phone = input("Zadejte telefonní číslo: ")
-    bio = input("Zadejte biografii: ")
 
-    f = open("sockpuppet.txt", "a")
-    f.write(f"Jméno: {name}\n"
-            f"Příjmení {surname}\n"
-            f"Věk: {age}\n"
-            f"Emailová adresa: {email}\n"
-            f"Heslo: {pw}\n"
-            f"Mobilní telefon: {phone}\n\n"
-            f"Biografie: {bio}\n")
-    f.close()
-
-
-# def generated_sock(user):
 def generated_sock():
     try:
         with open("osint_tools/filtered_wordlist_names.txt", "r", encoding="utf-8") as f:
@@ -87,11 +69,36 @@ def generated_sock():
         tm = Tempmail(login, password)
         email = tm.create_email()
 
+    year_of_birth = 2025 - age
+    month_of_birth = random.randint(1, 12)
+    if month_of_birth == 2:
+        day_of_birth = random.randint(1, 28)
+    else:
+        day_of_birth = random.randint(1, 31)
+
+    full_date = f"{day_of_birth}.{month_of_birth}.{year_of_birth}"
+    # date_of_birth = datetime.datetime.strptime(full_date, "%d.%m.%Y").date()
+
     bio_prompt = (f"Vytvoř náhodnou biografii pro osobu se jménem {name.capitalize()} {surname} s věkem {age} let. Biografie by měla být uvěřitelná. Nesmí se jednat o osobu, která"
-        f" by určitým způsobem mohla být známa veřejnosti. Rovnou začni se samotnou biografií a nic více k tomu nepiš.")
+        f" by určitým způsobem mohla být známa veřejnosti. Aktuální zaměstnání by mělo odpovídat poskytnutému věku. Rovnou začni se samotnou biografií a nic více k tomu nepiš.")
     bio_response = client.models.generate_content(
         model="gemini-2.0-flash", contents=f"{bio_prompt}"
     )
+    bio = bio_response.text
+
+    city_prompt = (f"Na základě této biografie: {bio} mi napiš z ktrého města daná osoba pochází. Chci, aby výsledek v promptu byl čistě název daného města. Jakmile vypíšeš toto město"
+                   f"nepiš za ním tečku.")
+    city_response = client.models.generate_content(
+        model="gemini-2.0-flash", contents=f"{city_prompt}"
+    )
+    city = city_response.text
+
+    street_address_prompt = (f"Na základě města {city} mi napiš ulici, na které by mohla bydlet osoba s následující biografií: {bio}. Chci, aby výsledek promptu byl čistě název ulice."
+                             f"Jakmile vypíšeš tuto ulici, nepiš za ním tečku.")
+    street_address_response = client.models.generate_content(
+        model="gemini-2.0-flash", contents=f"{street_address_prompt}"
+    )
+    street = street_address_response.text
 
     # response = client.models.generate_images(
     #     model='imagen-3.0-generate-002',
@@ -106,19 +113,24 @@ def generated_sock():
     # print(f"Obrázek uložen jako {name.capitalize()}_{surname_response.text}.png")
 
     fullname = f"{name.capitalize()} {surname}"
-    bio = bio_response.text
     puppet = SockPuppet()
 
-    if email is type(str):
+    if type(email) is str:
         data = {
             "fullname": fullname,
             "age": age,
+            "date_of_birth": full_date,
+            "city": city,
+            "street": street,
             "email": email,
             "password": password,
             "bio": bio
         }
         puppet.name = fullname
         puppet.age = age
+        puppet.date_of_birth = full_date
+        puppet.city = city
+        puppet.street_address = street
         puppet.email = email
         puppet.password = password
         puppet.bio = bio
@@ -127,10 +139,16 @@ def generated_sock():
         data = {
             "fullname": fullname,
             "age": age,
+            "date_of_birth": full_date,
+            "city": city,
+            "street": street,
             "bio": bio,
         }
         puppet.name = fullname
         puppet.age = age
+        puppet.date_of_birth = full_date
+        puppet.city = city
+        puppet.street_address = street
         puppet.bio = bio
         puppet.save()
     return data
