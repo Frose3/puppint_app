@@ -50,7 +50,7 @@ def main():
         print("You are not using a virtual environment!")
         return
 
-    run_command("python manage.py makemigrations")
+    run_command("python manage.py makemigrations app")
     run_command("python manage.py migrate")
 
     check_superuser()

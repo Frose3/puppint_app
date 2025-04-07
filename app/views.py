@@ -14,8 +14,7 @@ from django.urls import reverse
 from django.views import View
 from rest_framework import serializers
 
-from app.forms import UserProfileForm, IPStackForm, FullhuntQueryForm, ReverseForm, ShodanForm
-from app.models import UserProfile
+from app.forms import IPStackForm, FullhuntQueryForm, ReverseForm, ShodanForm
 from osint_tools import sockpuppet, ipstack, fullhunt, reverse
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.forms import UserCreationForm
