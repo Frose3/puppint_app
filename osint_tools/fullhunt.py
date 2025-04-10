@@ -6,7 +6,10 @@ from datetime import date
 def fullhunt(user_query):
     config = configparser.ConfigParser()
     config.read("api.env")
-    fullhunt_api_key = config.get("FULLHUNT", "FULLHUNT_API_KEY")
+    try:
+        fullhunt_api_key = config.get("FULLHUNT", "FULLHUNT_API_KEY")
+    except configparser.NoOptionError:
+        return False
 
     headers = {
         'X-API-KEY': fullhunt_api_key,
@@ -16,6 +19,7 @@ def fullhunt(user_query):
 
     if response.json().get('hosts'):
         return response.json()['hosts']
-
+    elif response.json().get('message') == 'Invalid API Key':
+        return 2
     else:
-        return 0
+        return 3

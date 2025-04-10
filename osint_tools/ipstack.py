@@ -4,9 +4,15 @@ import requests
 def ipstack(ip):
     config = configparser.ConfigParser()
     config.read("api.env")
-    ipstack_api_key = config.get("IPSTACK", "IPSTACK_API_KEY")
+    try:
+        ipstack_api_key = config.get("IPSTACK", "IPSTACK_API_KEY")
+    except configparser.NoOptionError:
+        return False
 
     response = requests.post(f"http://api.ipstack.com/{ip}?access_key={ipstack_api_key}")
+
+    if response.text.find("invalid_access_key"):
+        return 2
 
     data = {
         "ip": ip,

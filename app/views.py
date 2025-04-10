@@ -37,8 +37,22 @@ def sock_view(request):
     if request.method == 'POST':
         # data = sockpuppet.generated_sock(request.user)
         data = sockpuppet.generated_sock()
+
+        if data is False:
+            status = "no_api"
+            return render(request, "sock.html", {"sockpuppet": "None", "status": status})
+        if data.get("code"):
+            if data.code == 400:
+                status = "invalid_api"
+                return render(request, "sock.html", {"sockpuppet": data.message, "status": status})
+            else:
+                status = "error"
+                return render(request, "sock.html", {"sockpuppet": data.message, "status": status})
+        else:
+            status = "success"
+
         request.session['sockpuppet'] = data
-        return render(request, "sock.html", {"sockpuppet" : data})
+        return render(request, "sock.html", {"sockpuppet" : data, "status": status})
     return None
 
 def download_sock(request):
@@ -61,7 +75,17 @@ def ipstack_view(request):
         form = IPStackForm(request.POST)
         if form.is_valid():
             data = ipstack.ipstack(form.data['ip_address'])
-            return render(request, "ipstack.html", {"ipstack_info": data})
+
+            if data is False:
+                status = "no_api"
+                return render(request, "ipstack.html", {"ipstack_info": "None", "status": status})
+            elif data == 2:
+                status = "invalid_api"
+                return render(request, "ipstack.html", {"ipstack_info": "None", "status": status})
+            else:
+                status = "success"
+
+            return render(request, "ipstack.html", {"ipstack_info": data, "status": status})
 
 def reverse_view(request):
     if request.method == 'GET':
@@ -71,32 +95,39 @@ def reverse_view(request):
         form = ReverseForm(request.POST)
         if form.is_valid():
             data = reverse.reverse_image(form.data['img_url'])
-            if data.get("image_results") and data.get("knowledge_graph"):
-                return render(request, "reverse.html", {"rev_img": data["image_results"], "knowledge": data["knowledge_graph"]})
-            elif data.get("image_results") and not data.get("knowledge_graph"):
-                return render(request, "reverse.html",{"rev_img": data["image_results"]})
+
+            if data is False:
+                status = "no_api"
+                return render(request, "reverse.html", {"rev_img": "None", "status": status})
             else:
-                return render(request, "reverse.html", {"error": data["error"]})
+                status = "success"
+
+            if data.get("image_results") and data.get("knowledge_graph"):
+                return render(request, "reverse.html", {"rev_img": data["image_results"], "knowledge": data["knowledge_graph"], "status": status})
+            elif data.get("image_results") and not data.get("knowledge_graph"):
+                return render(request, "reverse.html",{"rev_img": data["image_results"], "status": status})
+            else:
+                return render(request, "reverse.html", {"error": data['error'], "status": "error"})
 
 def fullhunt_view(request):
     if request.method == 'GET':
         form = FullhuntQueryForm()
-        return render(request, "fullhunt.html", {"form": form})
+        return render(request, "fullhunt.html", {"form": form, "status":"invalid"})
     if request.method == 'POST':
         form = FullhuntQueryForm(request.POST)
         if form.is_valid():
             data = fullhunt.fullhunt(form.data['query'])
-            return render(request, "fullhunt.html", {"fullhunt_data": data})
-
-# @login_required
-# def profile_view(request):
-#     profile, created = UserProfile.objects.get_or_create(user=request.user)
-#     if request.method == 'POST':
-#         form = UserProfileForm(request.POST, instance=profile)
-#         if form.is_valid():
-#             form.save()
-#             return redirect("profile")
-#     else:
-#         form = UserProfileForm(instance=profile)
-#
-#     return render(request, "profile.html", {"form": form})
+            if data == 3:
+                status = "no_credits"
+                data = "no_credits"
+            elif data == 2:
+                status = "invalid_api"
+                data = "invalid_api"
+            elif data is False:
+                status = "no_api"
+                data = "no_api"
+            else:
+                status = "success"
+            return render(request, "fullhunt.html", {"form": form, "fullhunt_data": data, "status": status})
+        else:
+            return render(request, "fullhunt.html", {"form": form, "status": "invalid"})

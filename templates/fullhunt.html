@@ -1,6 +1,6 @@
 {% extends "index.html" %}
 {% load rest_framework %}
-{% block auth %}
+
     <style>
         label {
             font-size: 1.2em;
@@ -16,14 +16,14 @@
             background-color: #282828 !important;
         }
     </style>
-
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow-lg border-0">
-                    <div class="card-body text-center">
+{% block auth %}
+    <div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-lg border-0 result-card">
+            <div class="card-body">
+                <div class="card-body text-center">
                         <h2 class="card-title mb-4 text-primary">🔮 IOT FullHunt Search Engine</h2>
-                        {% if not fullhunt_data %}
+                        {% if status == "invalid" %}
                         <form method="POST">
                             {% csrf_token %}
                             <div class="mb-3">
@@ -34,15 +34,8 @@
                         </form>
                         {% endif %}
                     </div>
-                </div>
-            </div>
-        </div>
-
-        {% if fullhunt_data %}
-    <div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card shadow-lg border-0 result-card">
-            <div class="card-body">
+                {% if fullhunt_data %}
+                {% if status == "success" %}
                 <h4 class="text-primary mb-3">🔮 Zjištěné údaje:</h4>
                 <ul class="list-group list-group-flush">
                     {% for item in fullhunt_data %}
@@ -63,19 +56,6 @@
                             <strong>CNAME:</strong> {{ item.dns.cname|join:", " }}<br>
                             <strong>PTR:</strong> {{ item.dns.ptr|join:", " }}<br>
 
-{#                            <hr>#}
-
-{#                            <h5 class="text-secondary">Metadata certifikátu:</h5>#}
-{#                            <strong>Emailové adresy:</strong> {{ item.cert_object.email_addresses|default:"Není k dispozici" }}<br>#}
-{#                            <strong>MD5 Fingerprint:</strong> {{ item.cert_object.md5_fingerprint }}<br>#}
-{#                            <strong>SHA1 Fingerprint:</strong> {{ item.cert_object.sha1_fingerprint }}<br>#}
-{#                            <strong>SHA256 Fingerprint:</strong> {{ item.cert_object.sha256_fingerprint }}<br>#}
-{#                            <strong>Platnost od:</strong> {{ item.cert_object.not_before }}<br>#}
-{#                            <strong>Platnost do:</strong> {{ item.cert_object.not_after }}<br>#}
-{#                            <strong>Issuer Common Name:</strong> {{ item.cert_object.issuer_common_name }}<br>#}
-{#                            <strong>Issuer Organization:</strong> {{ item.cert_object.issuer_organization }}<br>#}
-{#                            <strong>Subject Locality:</strong> {{ item.cert_object.subject_locality }}<br>#}
-
                             <hr>
 
                             <h5 class="text-secondary">Informace o síti:</h5>
@@ -91,10 +71,29 @@
                         </li>
                         {% endfor %}
                     </ul>
+                {% elif status == "no_api" %}
+                    <div class="mt-4 text-center">
+                        <h4 class="mb-3">API nenalezeno!</h4>
+                        <h5 class="mb-3">Vložte API do souboru <strong class="text-danger">api.env</strong></h5>
+                    </div>
+                {% elif status == "no_credits" %}
+                <div class="mt-4 text-center">
+                    <h4 class="mb-3">Žádné kredity!</h4>
+                </div>
+                {% elif status == "invalid_api" %}
+                <div class="mt-4 text-center">
+                    <h4 class="mb-3">Zadané API není platné</h4>
+                </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-    {% endif %}
+
+{% endif %}
+{% endif %}
+
+
+
+
+
 {% endblock %}

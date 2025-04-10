@@ -2,6 +2,7 @@ import datetime
 import email
 import os
 
+from google.genai.errors import ClientError
 from pyasn1_modules.rfc2459 import street_address
 
 from osint_tools.tempmail import Tempmail
@@ -30,23 +31,20 @@ def generated_sock():
 
     config = configparser.ConfigParser()
     config.read("api.env")
-    gemini_api_key = config.get("GEMINI", "GEMINI_API_KEY")
-
-
-
-
-# V případě účtu
-#     profile = UserProfile.objects.get(user=user)
-#     gemini_api_key = profile.gemini_api_key if profile and profile.gemini_api_key else ""
-
-
+    try:
+        gemini_api_key = config.get("GEMINI", "GEMINI_API_KEY")
+    except configparser.NoOptionError:
+        return False
 
     client = genai.Client(api_key=gemini_api_key)
-    surname_prompt = (f"Jednoslovně mi napiš dobré příjmení. Chci aby výsledek promptu byl čistě jedno příjmení, které tě napadne ke jménu {name.capitalize()}. Je to {gender}"
-        f"Po tom co vybereš přijímení, tak chci, aby jsi nepsal za příjmením tečku.")
-    surname_response = client.models.generate_content(
-        model="gemini-2.0-flash", contents=f"{surname_prompt}"
-    )
+    try:
+        surname_prompt = (f"Jednoslovně mi napiš dobré příjmení. Chci aby výsledek promptu byl čistě jedno příjmení, které tě napadne ke jménu {name.capitalize()}. Je to {gender}"
+            f"Po tom co vybereš přijímení, tak chci, aby jsi nepsal za příjmením tečku.")
+        surname_response = client.models.generate_content(
+            model="gemini-2.0-flash", contents=f"{surname_prompt}"
+        )
+    except ClientError as e:
+        return e
 
     age = random.randint(18, 45)
 
@@ -115,7 +113,7 @@ def generated_sock():
     fullname = f"{name.capitalize()} {surname}"
     puppet = SockPuppet()
 
-    if type(email) is str:
+    if isinstance(email, str):
         data = {
             "fullname": fullname,
             "age": age,

@@ -1,6 +1,6 @@
 {% extends 'index.html' %}
 {% load rest_framework %}
-{% block auth %}
+
 <style>
     .list-group-item {
             font-size: 1em;
@@ -11,6 +11,7 @@
             color: #E0E0E0;
     }
 </style>
+{% block auth %}
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -18,7 +19,8 @@
                     <div class="card-body text-center">
                         <h2 class="card-title mb-4">🔍 Google Reverse Image Search</h2>
 
-                        {% if not rev_img or error%}
+
+                        {% if not rev_img and not error%}
                         <form method="POST">
                             {% csrf_token %}
                             <div class="mb-3">
@@ -29,6 +31,7 @@
                         </form>
                         {% endif %}
 
+                        {% if status == "success" %}
                         {% if rev_img %}
                         <div class="mt-4 text-start">
                             <h4 class="text-primary">Výsledky:</h4>
@@ -74,15 +77,23 @@
                         </div>
                         {% endif %}
 
-                        {% if error %}
-                        <div class="mt-4 text-start">
-                            <h4 class="text-danger">{{ error }}</h4>
+                        {% elif status == "error" %}
+                            {% if error %}
+                            <div class="mt-4 text-start">
+                                <h4 class="text-danger">{{ error }}</h4>
+                            </div>
+                            {% endif %}
+                        {% elif status == "no_api" %}
+                        <div class="mt-4 text-center">
+                            <h4 class="mb-3">API nenalezeno!</h4>
+                            <h5 class="mb-3">Vložte API do souboru <strong class="text-danger">api.env</strong></h5>
                         </div>
-                        {% endif %}
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+    {% endif %}
 {% endblock %}
