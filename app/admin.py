@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from app.models import UserProfile, SockPuppet
+from app.models import SockPuppet
 
 # login: admin
 # password: youhavebeenpwned

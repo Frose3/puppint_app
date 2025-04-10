@@ -4,7 +4,7 @@ import os
 
 from pyasn1_modules.rfc2459 import street_address
 
-from osint_tools.tempMail import Tempmail
+from osint_tools.tempmail import Tempmail
 import requests
 from google import genai
 from unidecode import unidecode
