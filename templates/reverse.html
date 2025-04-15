@@ -77,15 +77,18 @@
                         </div>
                         {% endif %}
 
-                        {% elif status == "error" %}
+                        {% elif status == "invalid_api" %}
                             {% if error %}
                             <div class="mt-4 text-start">
-                                <h4 class="text-danger">{{ error }}</h4>
+                                <h4 class="mb-3">❌ Zadané API není správné! ❌</h4>
+                                <h5 class="mb-3">API zkontrolujte <a href="https://serpapi.com" target="_blank">zde</a></h5>
+                                <h5 class="mb-3">Vložte API do souboru <strong class="text-danger">api.env</strong></h5>
                             </div>
                             {% endif %}
                         {% elif status == "no_api" %}
                         <div class="mt-4 text-center">
-                            <h4 class="mb-3">API nenalezeno!</h4>
+                            <h4 class="mb-3">❌ API nenalezeno! ❌</h4>
+                            <h5 class="mb-3">API získáte <a href="https://serpapi.com" target="_blank">zde</a></h5>
                             <h5 class="mb-3">Vložte API do souboru <strong class="text-danger">api.env</strong></h5>
                         </div>
                     </div>

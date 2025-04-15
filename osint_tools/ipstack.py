@@ -6,12 +6,14 @@ def ipstack(ip):
     config.read("api.env")
     try:
         ipstack_api_key = config.get("IPSTACK", "IPSTACK_API_KEY")
+        if ipstack_api_key == "":
+            return False
     except configparser.NoOptionError:
         return False
 
     response = requests.post(f"http://api.ipstack.com/{ip}?access_key={ipstack_api_key}")
 
-    if response.text.find("invalid_access_key"):
+    if response.text.find("invalid_access_key") != 1:
         return 2
 
     data = {

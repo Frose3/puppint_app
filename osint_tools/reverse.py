@@ -8,6 +8,8 @@ def reverse_image(img_url):
     config.read("api.env")
     try:
         serpapi_api_key = config.get("SERPAPI", "SERPAPI_API_KEY")
+        if serpapi_api_key == "":
+            return False
     except configparser.NoOptionError:
         return False
 

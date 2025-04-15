@@ -99,6 +99,9 @@ def reverse_view(request):
             if data is False:
                 status = "no_api"
                 return render(request, "reverse.html", {"rev_img": "None", "status": status})
+            elif data.get("error"):
+                status = "invalid_api"
+                return render(request, "reverse.html", {"rev_img": "None", "status": status})
             else:
                 status = "success"
 

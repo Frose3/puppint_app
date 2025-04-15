@@ -43,20 +43,21 @@
                             <a href="{% url 'download_sock' %}" class="btn btn-success mt-3"><strong>📥 Stáhnout JSON</strong></a>
 
                             <br>
-                            <p class="text-center mt-4"> Poznámka: Na email se můžete přihlásit na stránce <a href="https://mail.tm/">mail.tm</a></p>
+                            <p class="text-center mt-4"><strong class="warning">Poznámka:</strong> Na email se můžete přihlásit na stránce <a href="https://mail.tm/" target="_blank">mail.tm</a></p>
                         </div>
                             {% elif status == "no_api" %}
                             <div class="mt-4 text-center">
                                 <h4 class="mb-3">API nenalezeno!</h4>
+                                <h5 class="mb-3">API získáte <a href="https://ai.google.dev" target="_blank">zde</a></h5>
                                 <h5 class="mb-3">Vložte API do souboru <strong class="text-danger">api.env</strong></h5>
                             </div>
                             {% elif status == "invalid_api" %}
                             <div class="mt-4 text-center">
-                                <h4 class="mb-3">{{ sockpuppet }}</h4>
+                                <h4 class="mb-3"><strong>Error:</strong>❌ {{ sockpuppet }} ❌</h4>
                             </div>
                             {% elif status == "error" %}
                             <div class="mt-4 text-center">
-                                <h4 class="mb-3">{{ sockpuppet }}</h4>
+                                <h4 class="mb-3"><strong>Error:</strong>❌ {{ sockpuppet }} ❌</h4>
                             </div>
                             {% endif %}
                         {% endif %}

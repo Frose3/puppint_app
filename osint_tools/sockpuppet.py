@@ -33,6 +33,8 @@ def generated_sock():
     config.read("api.env")
     try:
         gemini_api_key = config.get("GEMINI", "GEMINI_API_KEY")
+        if gemini_api_key == "":
+            return False
     except configparser.NoOptionError:
         return False
 

@@ -8,6 +8,8 @@ def fullhunt(user_query):
     config.read("api.env")
     try:
         fullhunt_api_key = config.get("FULLHUNT", "FULLHUNT_API_KEY")
+        if fullhunt_api_key == "":
+            return False
     except configparser.NoOptionError:
         return False
 
