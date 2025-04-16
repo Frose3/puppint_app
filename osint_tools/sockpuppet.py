@@ -23,7 +23,7 @@ def generated_sock():
         with open("osint_tools/filtered_wordlist_names.txt", "r", encoding="utf-8") as f:
             names = f.readlines()
             name = random.choice(names).strip()
-            name = name.lower().split(",")[1]
+            first_name = name.lower().split(",")[1]
             gender = name.lower().split(",")[0]
     except FileNotFoundError:
         print("Wordlist file not found.")
@@ -40,34 +40,16 @@ def generated_sock():
 
     client = genai.Client(api_key=gemini_api_key)
     try:
-        surname_prompt = (f"Jednoslovně mi napiš dobré příjmení. Chci aby výsledek promptu byl čistě jedno příjmení, které tě napadne ke jménu {name.capitalize()}. Je to {gender}"
+        surname_prompt = (f"Jednoslovně mi napiš dobré příjmení. Chci aby výsledek promptu byl čistě jedno příjmení, které tě napadne ke jménu {first_name.capitalize()}. Je to {gender}"
             f"Po tom co vybereš přijímení, tak chci, aby jsi nepsal za příjmením tečku.")
         surname_response = client.models.generate_content(
             model="gemini-2.0-flash", contents=f"{surname_prompt}"
         )
     except ClientError as e:
-        return e
+        print(e)
+
 
     age = random.randint(18, 45)
-
-    surname = surname_response.text.strip()
-
-    login_options = [
-        surname.lower() + str(random.randint(0, 999)),
-        name + str(random.randint(0, 999)),
-        surname[0].lower() + name + str(random.randint(0, 999)),
-        name + surname[0].lower() + str(random.randint(0, 999))
-    ]
-
-    login = random.choice(login_options)
-    password = f"{name}{unidecode(surname)}{random.randint(0, 999)}"
-    tm = Tempmail(login, password)
-    email = tm.create_email()
-
-    if email == 422:
-        login = random.choice(login_options)
-        tm = Tempmail(login, password)
-        email = tm.create_email()
 
     year_of_birth = 2025 - age
     month_of_birth = random.randint(1, 12)
@@ -79,7 +61,33 @@ def generated_sock():
     full_date = f"{day_of_birth}.{month_of_birth}.{year_of_birth}"
     # date_of_birth = datetime.datetime.strptime(full_date, "%d.%m.%Y").date()
 
-    bio_prompt = (f"Vytvoř náhodnou biografii pro osobu se jménem {name.capitalize()} {surname} s věkem {age} let. Biografie by měla být uvěřitelná. Nesmí se jednat o osobu, která"
+    birth_number = ""
+
+    if gender == "muz":
+        birth_number = f"{str(year_of_birth)[-2:]}{month_of_birth:02d}{day_of_birth:02d}/{random.randint(1000, 9999)}"
+    elif gender == "zena":
+        birth_number = f"{str(year_of_birth)[-2:]}{(month_of_birth + 50):02d}{day_of_birth:02d}/{random.randint(1000, 9999)}"
+
+    surname = surname_response.text.strip()
+
+    login_options = [
+        surname.lower() + str(random.randint(0, 999)),
+        first_name + str(random.randint(0, 999)),
+        surname[0].lower() + first_name + str(random.randint(0, 999)),
+        first_name + surname[0].lower() + str(random.randint(0, 999))
+    ]
+
+    login = random.choice(login_options)
+    password = f"{first_name}{unidecode(surname)}{random.randint(0, 999)}"
+    tm = Tempmail(login, password)
+    email = tm.create_email()
+
+    if email == 422:
+        login = random.choice(login_options)
+        tm = Tempmail(login, password)
+        email = tm.create_email()
+
+    bio_prompt = (f"Vytvoř náhodnou biografii pro osobu se jménem {first_name.capitalize()} {surname} s věkem {age} let. Biografie by měla být uvěřitelná. Nesmí se jednat o osobu, která"
         f" by určitým způsobem mohla být známa veřejnosti. Aktuální zaměstnání by mělo odpovídat poskytnutému věku. Rovnou začni se samotnou biografií a nic více k tomu nepiš.")
     bio_response = client.models.generate_content(
         model="gemini-2.0-flash", contents=f"{bio_prompt}"
@@ -112,7 +120,7 @@ def generated_sock():
     #     image.save(f"{name.capitalize()}_{surname_response.text}.png")
     # print(f"Obrázek uložen jako {name.capitalize()}_{surname_response.text}.png")
 
-    fullname = f"{name.capitalize()} {surname}"
+    fullname = f"{first_name.capitalize()} {surname}"
     puppet = SockPuppet()
 
     if isinstance(email, str):
@@ -120,6 +128,7 @@ def generated_sock():
             "fullname": fullname,
             "age": age,
             "date_of_birth": full_date,
+            "birth_number": birth_number,
             "city": city,
             "street": street,
             "email": email,
@@ -129,6 +138,7 @@ def generated_sock():
         puppet.name = fullname
         puppet.age = age
         puppet.date_of_birth = full_date
+        puppet.birth_number = birth_number
         puppet.city = city
         puppet.street_address = street
         puppet.email = email
@@ -140,6 +150,7 @@ def generated_sock():
             "fullname": fullname,
             "age": age,
             "date_of_birth": full_date,
+            "birth_number": birth_number,
             "city": city,
             "street": street,
             "bio": bio,
@@ -147,6 +158,7 @@ def generated_sock():
         puppet.name = fullname
         puppet.age = age
         puppet.date_of_birth = full_date
+        puppet.birth_number = birth_number
         puppet.city = city
         puppet.street_address = street
         puppet.bio = bio

@@ -13,4 +13,5 @@ urlpatterns = [
     path('ipstack/', views.ipstack_view, name='ipstack'),
     path('reverse/', views.reverse_view, name='reverse'),
     path('fullhunt/', views.fullhunt_view, name='fullhunt'),
+    path('shodan/', views.shodan_view, name='shodan'),
 ]

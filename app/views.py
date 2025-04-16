@@ -14,8 +14,8 @@ from django.urls import reverse
 from django.views import View
 from rest_framework import serializers
 
-from app.forms import IPStackForm, FullhuntQueryForm, ReverseForm, ShodanForm
-from osint_tools import sockpuppet, ipstack, fullhunt, reverse
+from app.forms import IPStackForm, FullhuntQueryForm, ReverseForm, ShodanSearchForm, ShodanHostForm
+from osint_tools import sockpuppet, ipstack, fullhunt, reverse, shodan_api
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
@@ -74,7 +74,7 @@ def ipstack_view(request):
     if request.method == 'POST':
         form = IPStackForm(request.POST)
         if form.is_valid():
-            data = ipstack.ipstack(form.data['ip_address'])
+            data = ipstack.ipstack(form.cleaned_data['ip_address'])
 
             if data is False:
                 status = "no_api"
@@ -84,8 +84,10 @@ def ipstack_view(request):
                 return render(request, "ipstack.html", {"ipstack_info": "None", "status": status})
             else:
                 status = "success"
-
             return render(request, "ipstack.html", {"ipstack_info": data, "status": status})
+        return None
+    return None
+
 
 def reverse_view(request):
     if request.method == 'GET':
@@ -94,13 +96,10 @@ def reverse_view(request):
     if request.method == 'POST':
         form = ReverseForm(request.POST)
         if form.is_valid():
-            data = reverse.reverse_image(form.data['img_url'])
+            data = reverse.reverse_image(form.cleaned_data['img_url'])
 
             if data is False:
                 status = "no_api"
-                return render(request, "reverse.html", {"rev_img": "None", "status": status})
-            elif data.get("error"):
-                status = "invalid_api"
                 return render(request, "reverse.html", {"rev_img": "None", "status": status})
             else:
                 status = "success"
@@ -111,6 +110,9 @@ def reverse_view(request):
                 return render(request, "reverse.html",{"rev_img": data["image_results"], "status": status})
             else:
                 return render(request, "reverse.html", {"error": data['error'], "status": "error"})
+        return None
+    return None
+
 
 def fullhunt_view(request):
     if request.method == 'GET':
@@ -119,7 +121,7 @@ def fullhunt_view(request):
     if request.method == 'POST':
         form = FullhuntQueryForm(request.POST)
         if form.is_valid():
-            data = fullhunt.fullhunt(form.data['query'])
+            data = fullhunt.fullhunt(form.cleaned_data['query'])
             if data == 3:
                 status = "no_credits"
                 data = "no_credits"
@@ -134,3 +136,46 @@ def fullhunt_view(request):
             return render(request, "fullhunt.html", {"form": form, "fullhunt_data": data, "status": status})
         else:
             return render(request, "fullhunt.html", {"form": form, "status": "invalid"})
+    return None
+
+def shodan_view(request):
+    if request.method == 'GET':
+        form_host = ShodanHostForm()
+        form_search = ShodanSearchForm()
+        return render(request, "shodan.html", {"form_search": form_search, "form_host": form_host})
+    if request.method == 'POST':
+        if 'host' in request.POST:
+            form_host = ShodanHostForm(request.POST)
+            form_search = ShodanSearchForm()
+            if form_host.is_valid():
+                data = shodan_api.shodan_host(form_host.cleaned_data['host'])
+                if data == 2:
+                    status = "invalid_api"
+                    data = "invalid_api"
+                elif data is False:
+                    status = "no_api"
+                    data = "no_api"
+                else:
+                    status = "success"
+                return render(request, "shodan.html", {"form_search": form_search, "form_host": form_host, "data": data, "status": status})
+        elif 'service' in request.POST:
+            form_host = ShodanHostForm()
+            form_search = ShodanSearchForm(request.POST)
+            print("POST:", request.POST)
+            print("form_search errors:", form_search.errors)
+            if form_search.is_valid():
+                data = shodan_api.shodan_search(form_search.cleaned_data['service'])
+                if data == 2:
+                    status = "invalid_api"
+                    data = "invalid_api"
+                elif data is False:
+                    status = "no_api"
+                    data = "no_api"
+                else:
+                    status = "success"
+                return render(request, "shodan.html", {"form_search": form_search, "form_host": form_host, "data": data, "status": status})
+        else:
+            status = "error"
+            return render(request, "shodan.html", {"form_search": "None", "form_host": "None", "status": status})
+
+    return None
