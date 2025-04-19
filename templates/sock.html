@@ -38,13 +38,21 @@
                                 <li class="list-group-item"><strong>Ulice:</strong> {{ sockpuppet.street }}</li>
                                 <li class="list-group-item"><strong>Email:</strong> {{ sockpuppet.email }}</li>
                                 <li class="list-group-item"><strong>Heslo:</strong> {{ sockpuppet.password }}</li>
+                                <li class="list-group-item"><strong>Číslo karty:</strong> {{ sockpuppet.card_num }}</li>
+                                <li class="list-group-item"><strong>Doba platnosti:</strong> {{ sockpuppet.card_exp }}</li>
+                                <li class="list-group-item"><strong>Bezpečnostní číslo:</strong> {{ sockpuppet.card_cvv }}</li>
                                 <li class="list-group-item"><strong>Biografie:</strong> {{ sockpuppet.bio }}</li>
+                                <li class="list-group-item"><strong>Profesní životopis</strong> {{ sockpuppet.work_bio }}</li>
                             </ul>
                             <br>
                             <a href="{% url 'download_sock' %}" class="btn btn-success mt-3"><strong>📥 Stáhnout JSON</strong></a>
 
                             <br>
-                            <p class="text-center mt-4"><strong class="warning">Poznámka:</strong> Na email se můžete přihlásit na stránce <a href="https://mail.tm/" target="_blank">mail.tm</a></p>
+                            <p class="text-center mt-4"><strong class="primary">Email:</strong> Na email se můžete přihlásit na stránce <a href="https://mail.tm/" target="_blank">mail.tm</a></p>
+                            <p class="text-center mt-4">Pro anonymní vyhledávání je doporučen prohlížeč <a href="https://www.torproject.org" target="_blank">Tor</a></p>
+                            <p class="text-center mt-4"><strong class="warning">Poznámka:</strong> Pokud jsou některé údaje nevyplněné (např. biografie atd.), znamená to, že jste buď poskytli nesprávný API klíč (zkontrolujte logy) nebo je služba Gemini nedostupná.
+                                Tyto údaje jsou možné upravit v <a href="/admin">admin</a> rozhraní</p>
+
                         </div>
                             {% elif status == "no_api" %}
                             <div class="mt-4 text-center">

@@ -14,7 +14,7 @@ from django.urls import reverse
 from django.views import View
 from rest_framework import serializers
 
-from app.forms import IPStackForm, FullhuntQueryForm, ReverseForm, ShodanSearchForm, ShodanHostForm
+from app.forms import IPStackForm, FullhuntQueryForm, ReverseForm, ShodanSearchForm, ShodanHostForm, UnifiedForm
 from osint_tools import sockpuppet, ipstack, fullhunt, reverse, shodan_api
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.forms import UserCreationForm
@@ -35,19 +35,11 @@ def sock_view(request):
     if request.method == 'GET':
         return render(request, "sock.html")
     if request.method == 'POST':
-        # data = sockpuppet.generated_sock(request.user)
         data = sockpuppet.generated_sock()
 
         if data is False:
             status = "no_api"
             return render(request, "sock.html", {"sockpuppet": "None", "status": status})
-        if data.get("code"):
-            if data.code == 400:
-                status = "invalid_api"
-                return render(request, "sock.html", {"sockpuppet": data.message, "status": status})
-            else:
-                status = "error"
-                return render(request, "sock.html", {"sockpuppet": data.message, "status": status})
         else:
             status = "success"
 
@@ -179,3 +171,65 @@ def shodan_view(request):
             return render(request, "shodan.html", {"form_search": "None", "form_host": "None", "status": status})
 
     return None
+
+def puppint_view(request):
+    results = {}
+
+    if request.method == 'POST':
+        form = UnifiedForm(request.POST, request.FILES)
+        if form.is_valid():
+            service = form.cleaned_data.get('service')
+            ip = form.cleaned_data.get('host')
+            image_url = form.cleaned_data.get('image_url')
+            image_file = form.cleaned_data.get('image_file')
+
+            if form.cleaned_data.get('shodan'):
+                if ip:
+                    results['shodan_host'] = shodan_api.shodan_host(ip)
+                else:
+                    results['shodan_host'] = None
+
+                if service:
+                    results['shodan_search'] = shodan_api.shodan_search(service)
+                else:
+                    results['shodan_search'] = None
+            else:
+                results['shodan_search'] = None
+                results['shodan_host'] = None
+
+            if form.cleaned_data.get('ipstack') and ip:
+                results['ipstack'] = ipstack.ipstack(ip)
+            else:
+                results['ipstack'] = None
+
+            if form.cleaned_data.get('fullhunt') and service:
+                results['fullhunt'] = fullhunt.fullhunt(service)
+            else:
+                results['fullhunt'] = None
+
+            if form.cleaned_data.get('reverse_image'):
+                if image_url:
+                    results['reverse_image'] = reverse.reverse_image(image_url)
+                else:
+                    results['reverse_image'] = None
+            else:
+                results['reverse_image'] = None
+
+            request.session['results'] = results
+
+        return render(request, 'puppint.html', {'form': form, 'results': results})
+    else:
+        form = UnifiedForm()
+        return render(request, "puppint.html", {"form": form})
+
+def download_results(request):
+    data = request.session.get('results')
+    if not data:
+        return JsonResponse({"error": "No data found."}, status=400)
+    try:
+        data_json = json.dumps(data, indent=4, ensure_ascii=False, cls=DjangoJSONEncoder)
+        response = HttpResponse(data_json, content_type='application/json')
+        response["Content-Disposition"] = 'attachment; filename="puppint_results.json"'
+    except Exception as e:
+        return JsonResponse({"error": f" Unexpected error: {str(e)}"}, status=500)
+    return response

@@ -14,4 +14,6 @@ urlpatterns = [
     path('reverse/', views.reverse_view, name='reverse'),
     path('fullhunt/', views.fullhunt_view, name='fullhunt'),
     path('shodan/', views.shodan_view, name='shodan'),
+    path('puppint/', views.puppint_view, name='puppint'),
+    path('puppint/download', views.download_results, name='download_results'),
 ]

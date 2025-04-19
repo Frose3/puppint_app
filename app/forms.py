@@ -14,3 +14,14 @@ class ShodanSearchForm(forms.Form):
 
 class ShodanHostForm(forms.Form):
     host = forms.CharField(max_length=100, label="Host")
+
+class UnifiedForm(forms.Form):
+    service = forms.CharField(label="Doména", required=False)
+    host = forms.GenericIPAddressField(label="IP adresa", required=False)
+    image_url = forms.URLField(label="URL obrázku", required=False)
+    # image_file = forms.ImageField(label="Nahrát obrázek", required=False)
+
+    shodan = forms.BooleanField(label="Shodan", required=False)
+    ipstack = forms.BooleanField(label="IPStack", required=False)
+    fullhunt = forms.BooleanField(label="FullHunt", required=False)
+    reverse_image = forms.BooleanField(label="Reverse Image Search", required=False)

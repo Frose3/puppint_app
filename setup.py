@@ -28,6 +28,8 @@ def setup():
     run_command("pip install --upgrade pip")
     if os.path.exists("requirements.txt"):
         run_command("pip install -r requirements.txt")
+        if sys.platform == "linux":
+            run_command("sudo apt install sslscan")
     else:
         print("Soubor requirements.txt nebyl nalezen! Instalace základních balíčků...")
         run_command("pip install django django-bootstrap-v5 djangorestframework")
