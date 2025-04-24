@@ -38,8 +38,7 @@ def generated_sock():
     except configparser.NoOptionError:
         return False
 
-    # client = genai.Client(api_key=gemini_api_key)
-    client = genai.Client(api_key="dasfadsf")
+    client = genai.Client(api_key=gemini_api_key)
 
     surname = ""
     try:
