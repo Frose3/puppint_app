@@ -31,6 +31,13 @@
             padding: 20px;
             margin-bottom: 20px;
         }
+
+            .form-control-dark {
+            background-color: #2c2f33;
+            color: #f5f5f5;
+            border: 1px solid #444;
+        }
+
     </style>
 
 </head>
@@ -54,16 +61,7 @@
                     <a class="nav-link" href="/admin">Admin</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/ipstack/">IPSTACK</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/fullhunt/">FullHunt</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/shodan/">Shodan</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/reverse/">Image Reverse Search</a>
+                    <a class="nav-link" href="/puppint/">PUPPINT</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/sockpuppet/">Sock Puppet</a>
@@ -95,46 +93,25 @@
     <hr>
 
     <div class="container mt-5 pt-5">
-        <h1 class="text-center mb-4">Dostupné OSINT Nástroje</h1>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <h3 class="card-title">IPSTACK</h3>
-                    <a href="/ipstack/" class="stretched-link"></a>
-                    <p class="card-text">IPSTACK je nástroj pro skenování veřejných IP adres a získávání informací o geolokaci.</p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <h3 class="card-title">Sock Puppet</h3>
-                    <a href="/sockpuppet/" class="stretched-link"></a>
-                    <p class="card-text">Nástroj pro automatizované vytváření sock puppet účtů s generováním profilových fotek.</p>
-                </div>
-            </div>
-            <div class="col-md-6">
-            <div class="card p-3">
-                <h3 class="card-title">Google Image Reverse Search</h3>
-                <a href="/reverse/" class="stretched-link"></a>
-                <p class="card-text">Nástroj umožňující Google Reverse Image Search při poskytnutí URL obrázku.</p>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card p-3">
-                <h3 class="card-title">PUPPINT UNI TOOLS</h3>
+    <h1 class="text-center mb-4">Dostupné OSINT Nástroje</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card p-3 h-100">
+                <h3 class="card-title">PUPPINT TOOL</h3>
                 <a href="/puppint/" class="stretched-link"></a>
-                <p class="card-text">Skvělý nástroj, který určitě funguje na poprvé.</p>
+                <p class="card-text">Nástroj, který unifikuje nástroje, jako Shodan, FullHunt, IPStack, Google Reverse Image Search a Google Dorking.</p>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card p-3">
-                <h3 class="card-title">Shodan</h3>
-                <a href="/shodan/" class="stretched-link"></a>
-                <p class="card-text">Nástroj Shodan.</p>
+        <div class="col-md-6 col-lg-5">
+            <div class="card p-3 h-100">
+                <h3 class="card-title">Sock Puppet</h3>
+                <a href="/sockpuppet/" class="stretched-link"></a>
+                <p class="card-text">Nástroj pro automatizované vytváření sock puppet účtů s generováním profilových fotek.</p>
             </div>
-        </div>
         </div>
     </div>
 </div>
+    </div>
 {% endblock %}
 {% else %}
 {% block no_auth %}
@@ -152,16 +129,7 @@
                     <a class="nav-link" href="/admin/">Admin</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/ipstack/">IPSTACK</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/fullhunt/">FullHunt</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/shodan/">Shodan</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/reverse/">Image Reverse Search</a>
+                    <a class="nav-link" href="/puppint/">PUPPINT</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/sockpuppet/">Sock Puppet</a>

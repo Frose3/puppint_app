@@ -1,22 +1,13 @@
 import json
 
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.core.serializers import serialize
-from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
 from django.template import loader
-import requests
-import os
 
 from django.urls import reverse
-from django.views import View
-from rest_framework import serializers
 
 from app.forms import IPStackForm, FullhuntQueryForm, ReverseForm, ShodanSearchForm, ShodanHostForm, UnifiedForm
-from osint_tools import sockpuppet, ipstack, fullhunt, reverse, shodan_api
-from django.contrib.auth.hashers import make_password
+from osint_tools import sockpuppet, ipstack, fullhunt, reverse, shodan_api, dorking
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
@@ -174,6 +165,7 @@ def shodan_view(request):
 
 def puppint_view(request):
     results = {}
+    errors = []
 
     if request.method == 'POST':
         form = UnifiedForm(request.POST, request.FILES)
@@ -182,42 +174,67 @@ def puppint_view(request):
             ip = form.cleaned_data.get('host')
             image_url = form.cleaned_data.get('image_url')
             image_file = form.cleaned_data.get('image_file')
+            query = form.cleaned_data.get('query')
+            site = form.cleaned_data.get('site')
+            filetype = form.cleaned_data.get('filetype')
+            intitle = form.cleaned_data.get('intitle')
+            intext = form.cleaned_data.get('intext')
 
             if form.cleaned_data.get('shodan'):
-                if ip:
-                    results['shodan_host'] = shodan_api.shodan_host(ip)
-                else:
-                    results['shodan_host'] = None
+                try:
+                    if ip:
+                        results['shodan_host'] = shodan_api.shodan_host(ip)
+                    else:
+                        results['shodan_host'] = None
 
-                if service:
-                    results['shodan_search'] = shodan_api.shodan_search(service)
-                else:
-                    results['shodan_search'] = None
+                    if service:
+                        results['shodan_search'] = shodan_api.shodan_search(service)
+                    else:
+                        results['shodan_search'] = None
+                except Exception as e:
+                    errors.append(f"Shodan error: {str(e)}")
             else:
                 results['shodan_search'] = None
                 results['shodan_host'] = None
 
-            if form.cleaned_data.get('ipstack') and ip:
-                results['ipstack'] = ipstack.ipstack(ip)
-            else:
-                results['ipstack'] = None
 
-            if form.cleaned_data.get('fullhunt') and service:
-                results['fullhunt'] = fullhunt.fullhunt(service)
-            else:
-                results['fullhunt'] = None
+            try:
+                if form.cleaned_data.get('ipstack') and ip:
+                    results['ipstack'] = ipstack.ipstack(ip)
+                else:
+                    results['ipstack'] = None
+            except Exception as e:
+                errors.append(f"IPStack error: {str(e)}")
 
-            if form.cleaned_data.get('reverse_image'):
-                if image_url:
+
+            try:
+                if form.cleaned_data.get('fullhunt') and service:
+                    results['fullhunt'] = fullhunt.fullhunt(service)
+                else:
+                    results['fullhunt'] = None
+            except Exception as e:
+                errors.append(f"FullHunt error: {str(e)}")
+
+            try:
+                if form.cleaned_data.get('reverse_image') and image_url:
                     results['reverse_image'] = reverse.reverse_image(image_url)
                 else:
                     results['reverse_image'] = None
-            else:
-                results['reverse_image'] = None
+            except Exception as e:
+                errors.append(f"Serpapi error: {str(e)}")
+
+            try:
+                if form.cleaned_data.get('dorking') and any([query, site, intitle, intext]):
+                    dork = dorking.GoogleDork(query, site, filetype, intitle, intext)
+                    results['google_dork'] = dork.google_dorking()
+                else:
+                    results['google_dork'] = None
+            except Exception as e:
+                errors.append(f"Serpapi error: {str(e)}")
 
             request.session['results'] = results
 
-        return render(request, 'puppint.html', {'form': form, 'results': results})
+        return render(request, 'puppint.html', {'form': form, 'results': results, "errors": errors})
     else:
         form = UnifiedForm()
         return render(request, "puppint.html", {"form": form})

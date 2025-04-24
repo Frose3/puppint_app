@@ -11,59 +11,146 @@
                         <h2 class="card-title mb-4 text-primary">🔮 Universal OSINT Tool</h2>
                     {% if not results %}
                         <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
+                            {% csrf_token %}
 
-                        <div class="mb-3">
-                            {{ form.service.label_tag }}
-                            {{ form.service|add_class:"form-control" }}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form.host.label_tag }}
-                            {{ form.host|add_class:"form-control" }}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form.image_url.label_tag }}
-                            {{ form.image_url|add_class:"form-control" }}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form.image_file.label_tag }}
-                            {{ form.image_file|add_class:"form-control" }}
-                        </div>
-
-                        <div class="mb-3 text-center">
-                        <label class="form-label">Vyberte nástroje:</label><br>
-                        <div class="text-center">
-                            <div class="form-check d-inline-block text-start me-4">
-                                {{ form.shodan|add_class:"form-check-input" }}
-                                <label class="form-check-label ms-2" for="{{ form.shodan.id_for_label }}">Shodan</label>
+                            <div class="mb-4">
+                                {{ form.service.label_tag }}
+                                {{ form.service|add_class:"form-control form-control-dark" }}
                             </div>
-                            <div class="form-check d-inline-block text-start me-4">
-                                {{ form.ipstack|add_class:"form-check-input" }}
-                                <label class="form-check-label ms-2" for="{{ form.ipstack.id_for_label }}">IPStack</label>
-                            </div>
-                            <div class="form-check d-inline-block text-start me-4">
-                                {{ form.fullhunt|add_class:"form-check-input" }}
-                                <label class="form-check-label ms-2" for="{{ form.fullhunt.id_for_label }}">FullHunt</label>
-                            </div>
-                            <div class="form-check d-inline-block text-start me-4">
-                                {{ form.reverse_image|add_class:"form-check-input" }}
-                                <label class="form-check-label ms-2" for="{{ form.reverse_image.id_for_label }}">Google Reverse Image Search</label>
-                            </div>
-                        </div>
-                        </div>
 
-                        <button type="submit" class="btn btn-primary">Vyhledat</button>
-                    </form>
-            {% endif %}
+                            <div class="mb-4">
+                                {{ form.host.label_tag }}
+                                {{ form.host|add_class:"form-control form-control-dark" }}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ form.image_url.label_tag }}
+                                {{ form.image_url|add_class:"form-control form-control-dark" }}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ form.image_file.label_tag }}
+                                {{ form.image_file|add_class:"form-control form-control-dark" }}
+                            </div>
+
+                            <hr class="my-5">
+                            <h5 class="text-center mb-4">Google Dorking Parametry</h5>
+
+
+                            <div class="col-md">
+                                {{ form.query.label_tag }}
+                                {{ form.query|add_class:"form-control form-control-dark" }}
+                            </div>
+                        <div class="row">
+                            <div class="col-md">
+                                {{ form.site.label_tag }}
+                                {{ form.site|add_class:"form-control form-control-dark" }}
+                            </div>
+
+                            <div class="col-md">
+                                {{ form.filetype.label_tag }}
+                                {{ form.filetype|add_class:"form-control form-control-dark" }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md">
+                                {{ form.intitle.label_tag }}
+                                {{ form.intitle|add_class:"form-control form-control-dark" }}
+                            </div>
+
+                            <div class="col-md">
+                                {{ form.intext.label_tag }}
+                                {{ form.intext|add_class:"form-control form-control-dark" }}
+                            </div>
+                        </div>
+                            <hr class="my-5">
+
+                            <div class="mb-4 text-center">
+                                <label class="form-label">Vyberte nástroje:</label><br>
+                                <div class="text-center">
+                                    <div class="form-check d-inline-block text-start me-4">
+                                        {{ form.shodan|add_class:"form-check-input" }}
+                                        <label class="form-check-label ms-2" for="{{ form.shodan.id_for_label }}">Shodan</label>
+                                    </div>
+                                    <div class="form-check d-inline-block text-start me-4">
+                                        {{ form.ipstack|add_class:"form-check-input" }}
+                                        <label class="form-check-label ms-2" for="{{ form.ipstack.id_for_label }}">IPStack</label>
+                                    </div>
+                                    <div class="form-check d-inline-block text-start me-4">
+                                        {{ form.fullhunt|add_class:"form-check-input" }}
+                                        <label class="form-check-label ms-2" for="{{ form.fullhunt.id_for_label }}">FullHunt</label>
+                                    </div>
+                                    <div class="form-check d-inline-block text-start me-4">
+                                        {{ form.reverse_image|add_class:"form-check-input" }}
+                                        <label class="form-check-label ms-2" for="{{ form.reverse_image.id_for_label }}">Google Reverse Image Search</label>
+                                    </div>
+                                    <div class="form-check d-inline-block text-start me-4">
+                                        {{ form.dorking|add_class:"form-check-input" }}
+                                        <label class="form-check-label ms-2" for="{{ form.dorking.id_for_label }}">Google Dorking Search</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary">Vyhledat</button>
+                            </div>
+                        </form>
+                        {% endif %}
+
+                {% if errors %}
+                <h4 class="text-danger">ERRORS</h4>
+                <ul class="list-group">
+                    {% for error in errors %}
+                    <li class="list-group-item">
+                        {{ error }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
 
                     {% if results %}
                     <h4 class="text-primary mb-3">🔮 Zjištěné údaje:</h4>
                     <ul class="list-group list-group-flush">
-{#                    {% for item in results %}#}
+                    <div id="accordion">
+                        {% if results.google_dork %}
+                            <li class="list-group-item">
+                                <h4><strong class="text-warning">GOOGLE DORKING</strong></h4>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="mt-4 text-start">
+                            <h4 class="text-primary">Výsledky:</h4>
+                            <div class="row">
+                                {% for item in results.google_dork.organic_results %}
+                                    <div class="col-md-6">
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    {% if item.favicon %}
+                                                        <img src="{{ item.favicon }}" alt="Favicon" width="16" height="16" class="me-1">
+                                                    {% endif %}
+                                                    <a href="{{ item.link }}" target="_blank" class="text-decoration-none">
+                                                        {{ item.title }}
+                                                    </a>
+                                                </h5>
+                                                <p class="card-text">
+                                                    <strong>Zdroj:</strong> {{ item.source }} <br>
+                                                    <strong>Zobrazovaný odkaz:</strong> {{ item.displayed_link }}
+                                                </p>
+                                                <p class="card-text">
+                                                    {{ item.snippet }}
+                                                </p>
+                                                <a href="{{ item.redirect_link }}" class="btn btn-primary btn-sm" target="_blank">
+                                                    🔗 Otevřít stránku
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                            </li>
 
+                        {% endif %}
                         {% if results.ipstack %}
                             <li class="list-group-item">
                                 <h4><strong class="text-warning">IPSTACK</strong></h4>
@@ -78,9 +165,9 @@
                                 <strong>Zeměpisná výška:</strong> {{ results.ipstack.longitude }}<br>
                                 <strong>Jazyk:</strong> {{ results.ipstack.language }}<br>
                             </li>
-
+                            <hr>
                         {% endif %}
-                    <hr>
+
                         {% if results.fullhunt %}
                             <li class="list-group-item">
                                 <h4><strong class="text-warning">FULLHUNT</strong></h4>
@@ -117,8 +204,9 @@
                                 <strong>Longitude:</strong> {{ item.ip_metadata.location_longitude }}<br>
                             </li>
                             {% endfor %}
+                            <hr>
                         {% endif %}
-                        <hr>
+
                         {% if results.reverse_image %}
                             <li class="list-group-item">
                                 <h4><strong class="text-warning">REVERSE IMAGE SEARCH</strong></h4>
@@ -177,8 +265,9 @@
                                 </li>
                                 <br>
                             {% endfor %}
+                            <hr>
                         {% endif %}
-                    <hr>
+
                         {% if results.shodan_host %}
                             <li class="list-group-item">
                                 <h4><strong class="text-warning">SHODAN IP SEARCH</strong></h4>
@@ -199,7 +288,7 @@
                                 <br>
                             {% endfor %}
                         {% endif %}
-{#                        {% endfor %}#}
+                    </div>
                     </ul>
                     <br>
 
