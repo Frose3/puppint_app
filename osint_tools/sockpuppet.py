@@ -122,19 +122,8 @@ def generated_sock():
         bio = ""
 
     try:
-        work_bio_prompt = (f"Vytvoř náhodnou biografii pro osobu se jménem {first_name.capitalize()} {surname} s věkem {age} let. Biografie by měla být uvěřitelná. Nesmí se jednat o osobu, která"
-            f" by určitým způsobem mohla být známa veřejnosti. Aktuální zaměstnání by mělo odpovídat poskytnutému věku. Rovnou začni se samotnou biografií a nic více k tomu nepiš.")
-        work_bio_response = client.models.generate_content(
-            model="gemini-2.0-flash", contents=f"{work_bio_prompt}"
-        )
-        work_bio = work_bio_response.text
-    except ClientError as e:
-        print(e)
-        work_bio = ""
-
-    try:
-        city_prompt = (f"Na základě této biografie: {bio} mi napiš z ktrého města daná osoba pochází. Chci, aby výsledek v promptu byl čistě název daného města. Jakmile vypíšeš toto město"
-                       f"nepiš za ním tečku.")
+        city_prompt = (f"Na základě této biografie: {bio} mi napiš z ktrého města daná osoba pochází. Pokud město nepůjde jasně z biografie určit, použij náhodné město z oklí oblasti zmíněné v biografii."
+                       f"Chci, aby výsledek v promptu byl čistě název daného města. Jakmile vypíšeš toto město nepiš za ním tečku.")
         city_response = client.models.generate_content(
             model="gemini-2.0-flash", contents=f"{city_prompt}"
         )
@@ -150,7 +139,7 @@ def generated_sock():
             return None
 
     try:
-        street_address_prompt = (f"Na základě města {city} mi napiš ulici, na které by mohla bydlet osoba s následující biografií: {bio}. Chci, aby výsledek promptu byl čistě název ulice."
+        street_address_prompt = (f"Na základě města {city} mi napiš náhodnou ulici, na které by bylo možno bydlet. Chci, aby výsledek promptu byl čistě název ulice."
                                  f"Jakmile vypíšeš tuto ulici, nepiš za ním tečku.")
         street_address_response = client.models.generate_content(
             model="gemini-2.0-flash", contents=f"{street_address_prompt}"
@@ -160,6 +149,16 @@ def generated_sock():
         print(e)
         street = ""
 
+    try:
+        work_bio_prompt = (f"Na základě této biografie: {bio}, vytvoř profesní životopis. Profesní životopis by měl být uvěřitelný. Info o osobě: {email}, město: {city}, ulice: {street}"
+            f"Rovnou začni se samotný životopis a nic více k tomu nepiš.")
+        work_bio_response = client.models.generate_content(
+            model="gemini-2.0-flash", contents=f"{work_bio_prompt}"
+        )
+        work_bio = work_bio_response.text
+    except ClientError as e:
+        print(e)
+        work_bio = ""
     fullname = f"{first_name.capitalize()} {surname}"
     puppet = SockPuppet()
 

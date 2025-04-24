@@ -1,0 +1,9 @@
+{% extends 'index.html' %}
+
+<div class="container text-center">
+    {% if obj.photo and obj.photo.url %}
+    <img src="{{ obj.photo.url }}">
+    {% else %}
+        <h2>Fotka není k dispozici</h2>
+    {% endif %}
+</div>

@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 class SockPuppet(models.Model):
     name = models.CharField(max_length=255)
     age = models.IntegerField()
-    photo = models.ImageField(blank=True, null=True)
+    photo = models.ImageField(upload_to='sock_photos/', blank=True, null=True)
     date_of_birth = models.CharField(max_length=255, blank=True, null=True)
     birth_number = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
