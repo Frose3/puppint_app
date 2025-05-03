@@ -3,7 +3,39 @@
 {% load widget_tweaks %}
 {% block auth %}
 
+    <style>
+    .sidebar {
+        height: 100vh;
+        position: sticky;
+        top: 0;
+        padding: 1rem;
+        background-color: #222;
+        color: #fff;
+    }
+    .sidebar a {
+        display: block;
+        padding: 0.5rem 0;
+        color: #ddd;
+        text-decoration: none;
+    }
+    .sidebar a:hover {
+        color: #FFD700;
+        text-decoration: underline;
+    }
+    </style>
+
     <div class="row justify-content-center">
+    {% if results %}
+    <div class="col-md-3 col-lg-2 sidebar">
+            <h4 class="text-warning">🧭 Navigace</h4>
+            <a href="#google_dork">Google Dork</a>
+            <a href="#fullhunt">FullHunt</a>
+            <a href="#rev_img">Google Reverse Image Search</a>
+            <a href="#shodan_search"> Shodan Search</a>
+            <a href="#shodan_host">Shodan IP Search</a>
+            <a href="#download">Stažení JSON</a>
+        </div>
+    {% endif %}
     <div class="col-md-6">
         <div class="card shadow-lg border-0 result-card">
             <div class="card-body">
@@ -109,12 +141,12 @@
                 {% endif %}
 
                     {% if results %}
-                    <h4 class="text-primary mb-3">🔮 Zjištěné údaje:</h4>
+                    <h4 class="text-primary mb-3">Zjištěné údaje:</h4>
                     <ul class="list-group list-group-flush">
                     <div id="accordion">
                         {% if results.google_dork %}
                             <li class="list-group-item">
-                                <h4><strong class="text-warning">GOOGLE DORKING</strong></h4>
+                                <h4><strong class="text-warning" id="google_dork">GOOGLE DORKING</strong></h4>
                             </li>
                             <li class="list-group-item">
                                 <div class="mt-4 text-start">
@@ -153,7 +185,7 @@
                         {% endif %}
                         {% if results.ipstack %}
                             <li class="list-group-item">
-                                <h4><strong class="text-warning">IPSTACK</strong></h4>
+                                <h4><strong class="text-warning" id="ipstack">IPSTACK</strong></h4>
                             </li>
                             <li class="list-group-item">
                                 <strong>IP:</strong> {{ results.ipstack.ip }}<br>
@@ -170,9 +202,51 @@
 
                         {% if results.fullhunt %}
                             <li class="list-group-item">
-                                <h4><strong class="text-warning">FULLHUNT</strong></h4>
+                                <h4><strong class="text-warning" id="fullhunt">FULLHUNT</strong></h4>
                             </li>
                             {% for item in results.fullhunt %}
+
+                                <li class="list-group-item p-3">
+                                    <div class="card shadow-sm border-0">
+                                        <div class="card-body">
+                                            <h5 class="card-title text-primary">
+                                                🖥️ Hostitel: <span class="text-danger">{{ item.host }}</span>
+                                            </h5>
+                                            <p><strong>Doména:</strong> {{ item.domain }}</p>
+                                            <p><strong>IP adresa:</strong> {{ item.ip_address }}</p>
+                                            <p><strong>Stav HTTP:</strong> {{ item.http_status_code }}</p>
+                                            <p><strong>Titulek stránky:</strong> {{ item.http_title }}</p>
+                                            <p><strong>Porty:</strong> {{ item.network_ports|join:", " }}</p>
+                                            <p><strong>Tagy:</strong> {{ item.tags|join:", " }}</p>
+
+                                            <hr>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h6 class="text-secondary">🌐 DNS informace</h6>
+                                                    <p><strong>A záznamy:</strong> {{ item.dns.a|join:", " }}</p>
+                                                    <p><strong>AAAA záznamy:</strong> {{ item.dns.aaaa|join:", " }}</p>
+                                                    <p><strong>CNAME:</strong> {{ item.dns.cname|join:", " }}</p>
+                                                    <p><strong>PTR:</strong> {{ item.dns.ptr|join:", " }}</p>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <h6 class="text-secondary">📡 Informace o síti</h6>
+                                                    <p><strong>ASN:</strong> {{ item.ip_metadata.asn }}</p>
+                                                    <p><strong>ISP:</strong> {{ item.ip_metadata.isp }}</p>
+                                                    <p><strong>Organizace:</strong> {{ item.ip_metadata.organization }}</p>
+                                                    <p><strong>Město:</strong> {{ item.ip_metadata.city_name }}</p>
+                                                    <p><strong>Region:</strong> {{ item.ip_metadata.region }}</p>
+                                                    <p><strong>PSČ:</strong> {{ item.ip_metadata.postal_code }}</p>
+                                                    <p><strong>Země:</strong> {{ item.ip_metadata.country_name }}</p>
+                                                    <p><strong>Latitude:</strong> {{ item.ip_metadata.location_latitude }}</p>
+                                                    <p><strong>Longitude:</strong> {{ item.ip_metadata.location_longitude }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+
                             <li class="list-group-item">
                                 <h4><strong>Hostitel:</strong><span class="text-danger"> {{ item.host }}</span></h4>
                                 <strong>Doména:</strong> {{ item.domain }}<br>
@@ -209,7 +283,7 @@
 
                         {% if results.reverse_image %}
                             <li class="list-group-item">
-                                <h4><strong class="text-warning">REVERSE IMAGE SEARCH</strong></h4>
+                                <h4><strong class="text-warning" id="rev_img">REVERSE IMAGE SEARCH</strong></h4>
                             </li>
                         <li class="list-group-item">
                             <div class="mt-4 text-start">
@@ -248,29 +322,61 @@
                         {% endif %}
                         {% if results.shodan_search %}
                             <li class="list-group-item">
-                                <h4><strong class="text-warning">SHODAN SERVICE SEARCH</strong></h4>
+                                <h4 class="text-warning" id="shodan_search">🔍 SHODAN SERVICE SEARCH</h4>
                             </li>
-                            {% for item in results.shodan_search.matches %}
-                                <li class="list-group-item">
-                                    <strong>Hostnames: </strong>
-                                    {% for value in item.hostnames %}
-                                    | {{ value }} |
-                                    {% endfor %}
-                                </li>
-                                <li class="list-group-item">
-                                    <strong>IP: </strong>{{ item.ip_str }}
-                                </li>
-                                <li class="list-group-item">
-                                    <strong>Data: </strong>{{ item.data }}
-                                </li>
-                                <br>
+
+                            {% for item in results.shodan_search %}
+                            <li class="list-group-item p-3">
+                                <div class="card shadow-sm border-0">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-primary">
+                                            🌐 Hostitel: <span class="text-danger">{{ item.ip }}</span>
+                                        </h5>
+                                        <p><strong>Port:</strong> {{ item.port }} | <strong>Produkt:</strong> {{ item.product }}</p>
+                                        <p><strong>Web titulek:</strong> {{ item.title }}</p>
+
+                                        <hr>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6 class="text-secondary">🧾 Doménové informace</h6>
+                                                <p><strong>Domény:</strong> {{ item.domains|join:", " }}</p>
+                                                <p><strong>Hostnames:</strong> {{ item.hostnames|join:" | " }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6 class="text-secondary">🔐 SSL certifikát</h6>
+                                                <p><strong>Subject CN:</strong> {{ item.ssl_subject_cn }}</p>
+                                                <p><strong>Issuer CN:</strong> {{ item.ssl_issuer_cn }}</p>
+                                                <p><strong>Platnost:</strong> {{ item.ssl_valid_from }} – {{ item.ssl_valid_to }}</p>
+                                                <p><strong>Expirovaný:</strong> {{ item.ssl_expired }}</p>
+                                                <p><strong>Cipher:</strong> {{ item.ssl_cipher_name }} ({{ item.ssl_version }})</p>
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6 class="text-secondary">🌐 Síť</h6>
+                                                <p><strong>Organizace:</strong> {{ item.org }}</p>
+                                                <p><strong>ISP:</strong> {{ item.isp }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6 class="text-secondary">📍 Geolokace</h6>
+                                                <p><strong>Město:</strong> {{ item.city }}</p>
+                                                <p><strong>Země:</strong> {{ item.country }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
                             {% endfor %}
                             <hr>
                         {% endif %}
 
                         {% if results.shodan_host %}
                             <li class="list-group-item">
-                                <h4><strong class="text-warning">SHODAN IP SEARCH</strong></h4>
+                                <h4><strong class="text-warning" id="shodan_host">SHODAN IP SEARCH</strong></h4>
                             </li>
                             {% for item in results.shodan_host.matches %}
                                 <li class="list-group-item">
@@ -292,7 +398,7 @@
                     </ul>
                     <br>
 
-                    <a href="{% url 'download_results' %}" class="btn btn-success mt-3"><strong>📥 Stáhnout JSON</strong></a>
+                    <a href="{% url 'download_results' %}" class="btn btn-success mt-3" id="download"><strong>📥 Stáhnout JSON</strong></a>
                 {% endif %}
                 </div>
                 </div>

@@ -24,8 +24,8 @@ def fullhunt(user_query):
         if response.json().get('hosts'):
             return response.json()['hosts']
         elif response.json().get('message') == 'Invalid API Key':
-            return 2
+            raise Exception("Invalid API Key")
         else:
-            return 3
+            raise Exception(response.json().get('message'))
     except configparser.NoOptionError:
         return False

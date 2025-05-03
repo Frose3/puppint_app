@@ -18,7 +18,49 @@ import configparser
 from django.db import models
 from credit_card_info_generator import generate_credit_card
 
-def generated_sock():
+
+def generate_birth_num(gender, year_of_birth, month_of_birth, day_of_birth):
+    year = str(year_of_birth)[-2:]
+    month = str(month_of_birth)[-2:] if gender == 'male' else str(month_of_birth + 50)[-2:]
+    day = str(day_of_birth)[-2:]
+
+    while True:
+        final_rand = generate_birth_number_ending()
+        control = int(year + month + day + final_rand) % 11
+        if control == 10:
+            control = 0
+
+        mod = int(year + month + day + final_rand + str(control)) % 11
+        if mod == 0:
+            return f"{year}{month}{day}/{final_rand}{control}"
+
+
+def generate_birth_number_ending():
+    while True:
+        n1, n2, n3 = random.randint(0, 9), random.randint(0, 9), random.randint(0, 9)
+        if n1 != 0 and n2 != 0 and n3 != 0:
+            return f"{n1}{n2}{n3}"
+
+def generate_email(first_name, surname, password):
+    login_options = [
+        unidecode(surname.lower()) + str(random.randint(0, 999)),
+        unidecode(first_name) + str(random.randint(0, 999)),
+        unidecode(surname[0].lower()) + unidecode(first_name) + str(random.randint(0, 999)),
+        unidecode(first_name) + unidecode(surname[0].lower()) + str(random.randint(0, 999))
+    ]
+    login = random.choice(login_options)
+
+    tm = Tempmail(login, password)
+    email = tm.create_email()
+
+    if email == 422:
+        login = random.choice(login_options)
+        tm = Tempmail(login, password)
+        email = tm.create_email()
+
+    return email
+
+def generate_sock():
     try:
         with open("osint_tools/wordlist_firstnames.txt", "r", encoding="utf-8") as f:
             names = f.readlines()
@@ -26,7 +68,7 @@ def generated_sock():
             first_name = name.lower().split(",")[1]
             gender = name.lower().split(",")[0]
     except FileNotFoundError:
-        print("Wordlist file not found.")
+        print("Wordlist nebyl nalezen.")
         return None
 
     config = configparser.ConfigParser()
@@ -50,25 +92,25 @@ def generated_sock():
         surname = surname_response.text.strip()
     except ClientError as e:
         print(e)
-        if gender == 'muz':
+        if gender == 'male':
             try:
                 with open("osint_tools/wordlist_lastnames_male.txt", "r", encoding="utf-8") as f:
                     last_names = f.readlines()
                     surname = random.choice(last_names).strip()
             except FileNotFoundError:
-                print("Wordlist file not found.")
+                print("Wordlist nebyl nalezen.")
                 return None
 
-        if gender == 'zena':
+        if gender == 'female':
             try:
                 with open("osint_tools/wordlist_lastnames_female.txt", "r", encoding="utf-8") as f:
                     last_names = f.readlines()
                     surname = random.choice(last_names).strip()
             except FileNotFoundError:
-                print("Wordlist file not found.")
+                print("Wordlist nebyl nalezen.")
                 return None
 
-    age = random.randint(18, 45)
+    age = random.randint(18, 40)
 
     card = generate_credit_card('Visa')
 
@@ -86,29 +128,9 @@ def generated_sock():
     full_date = f"{day_of_birth}.{month_of_birth}.{year_of_birth}"
     # date_of_birth = datetime.datetime.strptime(full_date, "%d.%m.%Y").date()
 
-    birth_number = ""
-
-    if gender == "muz":
-        birth_number = f"{str(year_of_birth)[-2:]}{month_of_birth:02d}{day_of_birth:02d}/{random.randint(1000, 9999)}"
-    elif gender == "zena":
-        birth_number = f"{str(year_of_birth)[-2:]}{(month_of_birth + 50):02d}{day_of_birth:02d}/{random.randint(1000, 9999)}"
-
-    login_options = [
-        unidecode(surname.lower()) + str(random.randint(0, 999)),
-        unidecode(first_name) + str(random.randint(0, 999)),
-        unidecode(surname[0].lower()) + unidecode(first_name) + str(random.randint(0, 999)),
-        unidecode(first_name) + unidecode(surname[0].lower()) + str(random.randint(0, 999))
-    ]
-
-    login = random.choice(login_options)
+    birth_number = generate_birth_num(gender, year_of_birth, month_of_birth, day_of_birth)
     password = f"{first_name}{unidecode(surname)}{random.randint(0, 999)}"
-    tm = Tempmail(login, password)
-    email = tm.create_email()
-
-    if email == 422:
-        login = random.choice(login_options)
-        tm = Tempmail(login, password)
-        email = tm.create_email()
+    email = generate_email(first_name, surname, password)
 
     try:
         bio_prompt = (f"Vytvoř náhodnou biografii pro osobu se jménem {first_name.capitalize()} {surname} s věkem {age} let. Biografie by měla být uvěřitelná. Nesmí se jednat o osobu, která"
@@ -135,7 +157,7 @@ def generated_sock():
                 cities = f.readlines()
                 city = random.choice(cities).strip()
         except FileNotFoundError:
-            print("Wordlist file not found.")
+            print("Wordlist nebyl nalezen.")
             return None
 
     try:
@@ -151,7 +173,7 @@ def generated_sock():
 
     try:
         work_bio_prompt = (f"Na základě této biografie: {bio}, vytvoř profesní životopis. Profesní životopis by měl být uvěřitelný. Info o osobě: {email}, město: {city}, ulice: {street}"
-            f"Rovnou začni se samotný životopis a nic více k tomu nepiš.")
+            f"Celý životopis sepiš ve formátu Markdown. Rovnou začni se samotný životopis a nic více k tomu nepiš.")
         work_bio_response = client.models.generate_content(
             model="gemini-2.0-flash", contents=f"{work_bio_prompt}"
         )
@@ -159,7 +181,9 @@ def generated_sock():
     except ClientError as e:
         print(e)
         work_bio = ""
+
     fullname = f"{first_name.capitalize()} {surname}"
+
     puppet = SockPuppet()
 
     data = {
@@ -173,7 +197,8 @@ def generated_sock():
         "card_cvv": card_cvv,
         "card_exp": card_exp,
         "bio": bio,
-        "work_bio": work_bio
+        "work_bio": work_bio,
+        "additional_info": ""
     }
 
     if isinstance(email, str):
@@ -188,8 +213,12 @@ def generated_sock():
     puppet.birth_number = birth_number
     puppet.city = city
     puppet.street_address = street
+    puppet.card_num = card_num
+    puppet.card_cvv = card_cvv
+    puppet.card_exp = card_exp
     puppet.bio = bio
     puppet.work_bio = work_bio
+    puppet.additional_info = ""
 
     puppet.save()
     return data

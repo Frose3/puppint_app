@@ -17,7 +17,7 @@ class Tempmail:
         }
 
         if self.get_domain() is None:
-            logging.error("No domain available.")
+            logging.error("Doména není k dispozici")
             return None
 
         data = {
@@ -30,7 +30,7 @@ class Tempmail:
             response = response.json()['address']
             return response
         elif response.status_code == 422:
-            logging.debug("Account already exists.")
+            logging.debug("Daný email již existuje.")
             return 422
         elif response.status_code == 500:
             logging.error(response.json()["detail"])

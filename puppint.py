@@ -46,9 +46,9 @@ def main():
     print_banner()
     sleep(1)
 
-    if not is_virtualenv():
-        print("You are not using a virtual environment!")
-        return
+    # if not is_virtualenv():
+    #     print("You are not using a virtual environment!")
+    #     return
 
     run_command("python manage.py makemigrations app")
     run_command("python manage.py migrate")

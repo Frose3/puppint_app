@@ -13,10 +13,6 @@ urlpatterns = [
     path('sockpuppet/', views.sock_view, name='sockpuppet'),
     path('sockpuppet/download', views.download_sock, name='download_sock'),
     # path('profile/', views.profile_view, name='profile'),
-    path('ipstack/', views.ipstack_view, name='ipstack'),
-    path('reverse/', views.reverse_view, name='reverse'),
-    path('fullhunt/', views.fullhunt_view, name='fullhunt'),
-    path('shodan/', views.shodan_view, name='shodan'),
     path('puppint/', views.puppint_view, name='puppint'),
     path('puppint/download', views.download_results, name='download_results'),
 ]

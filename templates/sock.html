@@ -30,19 +30,19 @@
                         <div class="mt-4 text-start">
                             <h4 class="text-primary">👤 Vygenerované údaje:</h4>
                             <ul class="list-group">
-                                <li class="list-group-item"><strong>Jméno:</strong> {{ sockpuppet.fullname }}</li>
-                                <li class="list-group-item"><strong>Věk:</strong> {{ sockpuppet.age }}</li>
-                                <li class="list-group-item"><strong>Datum narození:</strong> {{ sockpuppet.date_of_birth }}</li>
-                                <li class="list-group-item"><strong>Rodné číslo:</strong> {{ sockpuppet.birth_number }}</li>
-                                <li class="list-group-item"><strong>Město:</strong> {{ sockpuppet.city }}</li>
-                                <li class="list-group-item"><strong>Ulice:</strong> {{ sockpuppet.street }}</li>
-                                <li class="list-group-item"><strong>Email:</strong> {{ sockpuppet.email }}</li>
-                                <li class="list-group-item"><strong>Heslo:</strong> {{ sockpuppet.password }}</li>
-                                <li class="list-group-item"><strong>Číslo karty:</strong> {{ sockpuppet.card_num }}</li>
-                                <li class="list-group-item"><strong>Doba platnosti:</strong> {{ sockpuppet.card_exp }}</li>
-                                <li class="list-group-item"><strong>Bezpečnostní číslo:</strong> {{ sockpuppet.card_cvv }}</li>
-                                <li class="list-group-item"><strong>Biografie:</strong> {{ sockpuppet.bio }}</li>
-                                <li class="list-group-item"><strong>Profesní životopis: </strong> {{ sockpuppet.work_bio }}</li>
+                                <li class="list-group-item"><strong class="text-info">Jméno:</strong> {{ sockpuppet.fullname }}</li>
+                                <li class="list-group-item"><strong class="text-info">Věk:</strong> {{ sockpuppet.age }}</li>
+                                <li class="list-group-item"><strong class="text-info">Datum narození:</strong> {{ sockpuppet.date_of_birth }}</li>
+                                <li class="list-group-item"><strong class="text-info">Rodné číslo:</strong> {{ sockpuppet.birth_number }}</li>
+                                <li class="list-group-item"><strong class="text-info">Město:</strong> {{ sockpuppet.city }}</li>
+                                <li class="list-group-item"><strong class="text-info">Ulice:</strong> {{ sockpuppet.street }}</li>
+                                <li class="list-group-item"><strong class="text-info">Email:</strong> {{ sockpuppet.email }}</li>
+                                <li class="list-group-item"><strong class="text-info">Heslo:</strong> {{ sockpuppet.password }}</li>
+                                <li class="list-group-item"><strong class="text-info">Číslo karty:</strong> {{ sockpuppet.card_num }}</li>
+                                <li class="list-group-item"><strong class="text-info">Doba platnosti:</strong> {{ sockpuppet.card_exp }}</li>
+                                <li class="list-group-item"><strong class="text-info">Bezpečnostní číslo:</strong> {{ sockpuppet.card_cvv }}</li>
+                                <li class="list-group-item"><strong class="text-info">Biografie:</strong> {{ sockpuppet.bio }}</li>
+                                <li class="list-group-item"><strong class="text-info">Profesní životopis: </strong> {{ sockpuppet.work_bio|safe }}</li>
                             </ul>
                             <br>
                             <a href="{% url 'download_sock' %}" class="btn btn-success mt-3"><strong>📥 Stáhnout JSON</strong></a>

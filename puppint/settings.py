@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
+from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%oo=z6=@^zbjdmvdja4hg3l1_&2iwl=s9m8%x@kfmrkw=6-55l'
+# SECRET_KEY = 'django-insecure-%oo=z6=@^zbjdmvdja4hg3l1_&2iwl=s9m8%x@kfmrkw=6-55l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+# SECRET_KEY = os.environ.get("SECRET_KEY")
+
+DEBUG = bool(os.environ.get("DEBUG", default=0))
+
+# ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
 
 
 # Application definition
@@ -82,10 +89,6 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-        'USER': 'admin',
-        'PASSWORD': 'youhavebeenpwned',
-        'HOST': 'localhost',
-        'PORT': '5432',
     }
 }
 
@@ -136,3 +139,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
+
+def get_or_create_secret_key():
+    secret_key = os.getenv("SECRET_KEY")
+    if not secret_key:
+        secret_key = secret_key
+
+    try:
+        with open('api.env', 'r') as f:
+            for line in f:
+                if line.startswith("SECRET_KEY="):
+                    return line.strip().split("=", 1)[1]
+    except FileNotFoundError:
+        pass
+
+    new_key = get_random_secret_key()
+    with open("api.env", "a") as f:
+        f.write(f"\nSECRET_KEY={new_key}\n")
+    print("SECRET_KEY byl automaticky vygenerován a přidán do api.env")
+    return new_key
+
+
+SECRET_KEY = get_or_create_secret_key()
