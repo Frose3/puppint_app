@@ -12,6 +12,4 @@ services:
       - ./api.env
     working_dir: /app
     command: >
-      sh -c "python manage.py makemigrations app &&
-             python manage.py migrate &&
-             ./create_superuser.sh"
+      sh -c "python puppint.py"

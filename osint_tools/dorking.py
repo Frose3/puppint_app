@@ -1,4 +1,6 @@
 import configparser
+import os
+from dotenv import load_dotenv
 
 import requests
 from serpapi import GoogleSearch
@@ -12,10 +14,9 @@ class GoogleDork:
         self.intext = intext
 
     def google_dorking(self):
-        config = configparser.ConfigParser()
-        config.read("api.env")
         try:
-            serpapi_api_key = config.get("SERPAPI", "SERPAPI_API_KEY")
+            load_dotenv(dotenv_path="api.env")
+            serpapi_api_key = os.getenv("SERPAPI_API_KEY")
             if serpapi_api_key == "":
                 return False
 
@@ -39,26 +40,3 @@ class GoogleDork:
 
         except configparser.NoOptionError:
             return False
-
-
-    # def google_dorking(query, site, filetype, intitle, intext):
-    #     config = configparser.ConfigParser()
-    #     config.read("api.env")
-    #     try:
-    #         serpapi_api_key = config.get("SERPAPI", "SERPAPI_API_KEY")
-    #         if serpapi_api_key == "":
-    #             return False
-    #
-    #         params = {
-    #             "engine": "google",
-    #             "q": f'{query} site:"{site}" filetype:{filetype} intitle:"{intitle}" intext:"{intext}"',
-    #             "api_key": f"{serpapi_api_key}",
-    #         }
-    #
-    #         search = GoogleSearch(params)
-    #         results = search.get_dict()
-    #
-    #         return results['organic_results']
-    #
-    #     except configparser.NoOptionError:
-    #         return False

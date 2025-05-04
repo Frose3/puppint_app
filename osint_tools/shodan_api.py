@@ -1,6 +1,7 @@
 import shodan
 import configparser
 import os
+from dotenv import load_dotenv
 
 def deep_get(d, keys, default='N/A'):
     for key in keys:
@@ -15,11 +16,8 @@ def deep_get(d, keys, default='N/A'):
         return default
 
 def shodan_search(user_request):
-    # config = configparser.ConfigParser()
-    # config.read("api.env")
-
     try:
-        # shodan_api_key = config.get("SHODAN", "SHODAN_API_KEY")
+        load_dotenv(dotenv_path="api.env")
         shodan_api_key = os.getenv("SHODAN_API")
         api = shodan.Shodan(shodan_api_key)
 

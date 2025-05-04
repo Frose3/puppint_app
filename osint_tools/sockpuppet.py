@@ -4,7 +4,7 @@ import os
 
 from google.genai.errors import ClientError
 from pyasn1_modules.rfc2459 import street_address
-
+from dotenv import load_dotenv
 from osint_tools.tempmail import Tempmail
 import requests
 from google import genai
@@ -71,10 +71,9 @@ def generate_sock():
         print("Wordlist nebyl nalezen.")
         return None
 
-    config = configparser.ConfigParser()
-    config.read("api.env")
     try:
-        gemini_api_key = config.get("GEMINI", "GEMINI_API_KEY")
+        load_dotenv(dotenv_path="api.env")
+        gemini_api_key = os.getenv("SHODAN_API")
         if gemini_api_key == "":
             return False
     except configparser.NoOptionError:

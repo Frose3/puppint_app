@@ -1,13 +1,12 @@
 import configparser
-
-import requests
+import os
+from dotenv import load_dotenv
 from serpapi import GoogleSearch
 
 def reverse_image(img_url):
-    config = configparser.ConfigParser()
-    config.read("api.env")
     try:
-        serpapi_api_key = config.get("SERPAPI", "SERPAPI_API_KEY")
+        load_dotenv(dotenv_path="api.env")
+        serpapi_api_key = os.getenv("SERPAPI_API_KEY")
         if serpapi_api_key == "":
             return False
 

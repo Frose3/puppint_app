@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 from django.core.management.utils import get_random_secret_key
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -140,18 +141,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
 
+# Funce pro generování soukromého klíče pro Django
 def get_or_create_secret_key():
+    load_dotenv(dotenv_path="api.env")
     secret_key = os.getenv("SECRET_KEY")
-    if not secret_key:
-        secret_key = secret_key
-
-    try:
-        with open('api.env', 'r') as f:
-            for line in f:
-                if line.startswith("SECRET_KEY="):
-                    return line.strip().split("=", 1)[1]
-    except FileNotFoundError:
-        pass
+    if secret_key:
+        return secret_key
 
     new_key = get_random_secret_key()
     with open("api.env", "a") as f:

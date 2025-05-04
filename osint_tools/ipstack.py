@@ -1,11 +1,12 @@
+import os
 import configparser
 import requests
+from dotenv import load_dotenv
 
 def ipstack(ip):
-    config = configparser.ConfigParser()
-    config.read("api.env")
     try:
-        ipstack_api_key = config.get("IPSTACK", "IPSTACK_API_KEY")
+        load_dotenv(dotenv_path="api.env")
+        ipstack_api_key = os.getenv("IPSTACK_API_KEY")
         if ipstack_api_key == "":
             return False
 

@@ -1,14 +1,15 @@
+import os
 import requests
 import base64
 import configparser
 from datetime import date
 import httpx
+from dotenv import load_dotenv
 
 def fullhunt(user_query):
-    config = configparser.ConfigParser()
-    config.read("api.env")
     try:
-        fullhunt_api_key = config.get("FULLHUNT", "FULLHUNT_API_KEY")
+        load_dotenv(dotenv_path="api.env")
+        fullhunt_api_key = os.getenv("FULLHUNT_API_KEY")
         if fullhunt_api_key == "":
             return False
 
@@ -18,8 +19,7 @@ def fullhunt(user_query):
             'Connection': 'close'
         }
 
-        url = f"https://fullhunt.io/api/v1/domain/{user_query}/details"
-        response = httpx.get(url, headers=headers)
+        response = httpx.get(f"https://fullhunt.io/api/v1/domain/{user_query}/details", headers=headers)
 
         if response.json().get('hosts'):
             return response.json()['hosts']

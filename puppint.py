@@ -1,17 +1,12 @@
 import os
 import subprocess
 from time import sleep
-import sqlite3
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'puppint.settings')
 
 import django
 django.setup()
-
-
-from django.core.management import execute_from_command_line
 from django.contrib.auth.models import User
-from setup import is_virtualenv, run_command
 
 def print_banner():
     banner = r"""
@@ -31,6 +26,12 @@ def print_banner():
 """
     print(banner)
 
+def run_command(command):
+    try:
+        subprocess.run(command, shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Chyba při spuštění příkazu '{command}': {e}")
+
 def check_superuser():
     if not User.objects.filter(is_superuser=True).exists():
         print("V databázi není žádný superuser!")
@@ -46,16 +47,12 @@ def main():
     print_banner()
     sleep(1)
 
-    # if not is_virtualenv():
-    #     print("You are not using a virtual environment!")
-    #     return
-
     run_command("python manage.py makemigrations app")
     run_command("python manage.py migrate")
 
     check_superuser()
 
-    run_command("python manage.py runserver")
+    run_command("python manage.py runserver 0.0.0.0:8000")
 
 if __name__ == "__main__":
     main()

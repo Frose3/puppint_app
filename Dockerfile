@@ -47,8 +47,4 @@ USER appuser
 # Expose the application port
 EXPOSE 8000
 
-# Udělej skript spustitelným
-RUN chmod +x create_superuser.sh
-
-# Start the application using Gunicorn
-CMD ["./create_superuser.sh"]
+CMD ["python3 puppint.py"]
