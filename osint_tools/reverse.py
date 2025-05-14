@@ -19,7 +19,17 @@ def reverse_image(img_url):
         search = GoogleSearch(params)
         results = search.get_dict()
 
-        return results
+        data = {
+            "favicon": results["organic_results"]["favicon"],
+            "link": results["organic_results"]["link"],
+            "title": results["organic_results"]["title"],
+            "source": results["organic_results"]["source"],
+            "displayed_link": results["organic_results"]["displayed_link"],
+            "snippet": results["organic_results"]["snippet"],
+            "redirect_link": results["organic_results"]["redirect_link"],
+        }
 
-    except configparser.NoOptionError:
+        return data
+
+    except Exception as e:
         return False

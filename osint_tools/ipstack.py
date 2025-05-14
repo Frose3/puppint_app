@@ -27,5 +27,5 @@ def ipstack(ip):
         }
 
         return data
-    except configparser.NoOptionError:
+    except Exception:
         return False

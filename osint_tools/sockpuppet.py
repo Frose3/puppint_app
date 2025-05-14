@@ -1,21 +1,14 @@
-import datetime
 import email
 import os
 
 from google.genai.errors import ClientError
-from pyasn1_modules.rfc2459 import street_address
 from dotenv import load_dotenv
 from osint_tools.tempmail import Tempmail
-import requests
 from google import genai
 from unidecode import unidecode
-from google.genai import types
-# from PIL import Image
-from io import BytesIO
 import random
 from app.models import SockPuppet
 import configparser
-from django.db import models
 from credit_card_info_generator import generate_credit_card
 
 
@@ -73,7 +66,7 @@ def generate_sock():
 
     try:
         load_dotenv(dotenv_path="api.env")
-        gemini_api_key = os.getenv("SHODAN_API")
+        gemini_api_key = os.getenv("GEMINI_API_KEY")
         if gemini_api_key == "":
             return False
     except configparser.NoOptionError:
@@ -111,6 +104,26 @@ def generate_sock():
 
     age = random.randint(18, 40)
 
+    try:
+        height_prompt = (f"Napiš jakou výšku v centimetrech by mohla mít osoba se jménem {first_name.capitalize()} {surname} s věkem {age}."
+            f"Rovnou napiš příslušné celé číslo a nic více k tomu nepiš. Nepiš za výškou tečku.")
+        height_response = client.models.generate_content(
+            model="gemini-2.0-flash", contents=f"{height_prompt}"
+        )
+        height = int(height_response.text.strip())
+    except ClientError as e:
+        height = random.randint(156, 200)
+
+    try:
+        weight_prompt = (f"Napiš jakou váhu v kilogramech by mohla mít osoba se jménem {first_name.capitalize()} {surname}, s věkem {age} a s výškou {height}."
+            f"Rovnou napiš příslušné celé číslo a nic více k tomu nepiš. Nepiš za váhu tečku.")
+        weight_response = client.models.generate_content(
+            model="gemini-2.0-flash", contents=f"{weight_prompt}"
+        )
+        weight = int(weight_response.text.strip())
+    except ClientError as e:
+        weight = random.randint(60, 110)
+
     card = generate_credit_card('Visa')
 
     card_num = card['card_number']
@@ -125,11 +138,10 @@ def generate_sock():
         day_of_birth = random.randint(1, 31)
 
     full_date = f"{day_of_birth}.{month_of_birth}.{year_of_birth}"
-    # date_of_birth = datetime.datetime.strptime(full_date, "%d.%m.%Y").date()
 
     birth_number = generate_birth_num(gender, year_of_birth, month_of_birth, day_of_birth)
-    password = f"{first_name}{unidecode(surname)}{random.randint(0, 999)}"
-    email = generate_email(first_name, surname, password)
+    # password = f"{first_name}{unidecode(surname)}{random.randint(0, 999)}"
+    # email = generate_email(first_name, surname, password)
 
     try:
         bio_prompt = (f"Vytvoř náhodnou biografii pro osobu se jménem {first_name.capitalize()} {surname} s věkem {age} let. Biografie by měla být uvěřitelná. Nesmí se jednat o osobu, která"
@@ -172,7 +184,7 @@ def generate_sock():
 
     try:
         work_bio_prompt = (f"Na základě této biografie: {bio}, vytvoř profesní životopis. Profesní životopis by měl být uvěřitelný. Info o osobě: {email}, město: {city}, ulice: {street}"
-            f"Celý životopis sepiš ve formátu Markdown. Rovnou začni se samotný životopis a nic více k tomu nepiš.")
+            f"Celý životopis sepiš ve formátu Markdown. Vynechej část: \"<p>```markdown</p>\" a rovnou začni se samotný životopis a nic více k tomu nepiš.")
         work_bio_response = client.models.generate_content(
             model="gemini-2.0-flash", contents=f"{work_bio_prompt}"
         )
@@ -188,6 +200,8 @@ def generate_sock():
     data = {
         "fullname": fullname,
         "age": age,
+        "height": height,
+        "weight": weight,
         "date_of_birth": full_date,
         "birth_number": birth_number,
         "city": city,
@@ -208,6 +222,8 @@ def generate_sock():
 
     puppet.name = fullname
     puppet.age = age
+    puppet.height = height
+    puppet.weight = weight
     puppet.date_of_birth = full_date
     puppet.birth_number = birth_number
     puppet.city = city

@@ -152,7 +152,7 @@
                                 <div class="mt-4 text-start">
                             <h4 class="text-primary">Výsledky:</h4>
                             <div class="row">
-                                {% for item in results.google_dork.organic_results %}
+                                {% for item in results.google_dork %}
                                     <div class="col-md-6">
                                         <div class="card mb-3">
                                             <div class="card-body">
@@ -224,59 +224,28 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <h6 class="text-secondary">🌐 DNS informace</h6>
-                                                    <p><strong>A záznamy:</strong> {{ item.dns.a|join:", " }}</p>
-                                                    <p><strong>AAAA záznamy:</strong> {{ item.dns.aaaa|join:", " }}</p>
-                                                    <p><strong>CNAME:</strong> {{ item.dns.cname|join:", " }}</p>
-                                                    <p><strong>PTR:</strong> {{ item.dns.ptr|join:", " }}</p>
+                                                    <p><strong>A záznamy:</strong> {{ item.dns_a|join:", " }}</p>
+                                                    <p><strong>AAAA záznamy:</strong> {{ item.dns_aaaa|join:", " }}</p>
+                                                    <p><strong>CNAME:</strong> {{ item.dns_cname|join:", " }}</p>
+                                                    <p><strong>PTR:</strong> {{ item.dns_ptr|join:", " }}</p>
                                                 </div>
 
                                                 <div class="col-md-6">
                                                     <h6 class="text-secondary">📡 Informace o síti</h6>
-                                                    <p><strong>ASN:</strong> {{ item.ip_metadata.asn }}</p>
-                                                    <p><strong>ISP:</strong> {{ item.ip_metadata.isp }}</p>
-                                                    <p><strong>Organizace:</strong> {{ item.ip_metadata.organization }}</p>
-                                                    <p><strong>Město:</strong> {{ item.ip_metadata.city_name }}</p>
-                                                    <p><strong>Region:</strong> {{ item.ip_metadata.region }}</p>
-                                                    <p><strong>PSČ:</strong> {{ item.ip_metadata.postal_code }}</p>
-                                                    <p><strong>Země:</strong> {{ item.ip_metadata.country_name }}</p>
-                                                    <p><strong>Latitude:</strong> {{ item.ip_metadata.location_latitude }}</p>
-                                                    <p><strong>Longitude:</strong> {{ item.ip_metadata.location_longitude }}</p>
+                                                    <p><strong>ASN:</strong> {{ item.ip_metadata_asn }}</p>
+                                                    <p><strong>ISP:</strong> {{ item.ip_metadata_isp }}</p>
+                                                    <p><strong>Organizace:</strong> {{ item.ip_metadata_organization }}</p>
+                                                    <p><strong>Město:</strong> {{ item.ip_metadata_city_name }}</p>
+                                                    <p><strong>Region:</strong> {{ item.ip_metadata_region }}</p>
+                                                    <p><strong>PSČ:</strong> {{ item.ip_metadata_postal_code }}</p>
+                                                    <p><strong>Země:</strong> {{ item.ip_metadata_country_name }}</p>
+                                                    <p><strong>Latitude:</strong> {{ item.ip_metadata_location_latitude }}</p>
+                                                    <p><strong>Longitude:</strong> {{ item.ip_metadata_location_longitude }}</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </li>
-
-                            <li class="list-group-item">
-                                <h4><strong>Hostitel:</strong><span class="text-danger"> {{ item.host }}</span></h4>
-                                <strong>Doména:</strong> {{ item.domain }}<br>
-                                <strong>IP adresa:</strong> {{ item.ip_address }}<br>
-                                <strong>Stav HTTP:</strong> {{ item.http_status_code }}<br>
-                                <strong>Titulek stránky:</strong> {{ item.http_title }}<br>
-                                <strong>Porty:</strong> {{ item.network_ports|join:", " }}<br>
-                                <strong>Tagy:</strong> {{ item.tags|join:", " }}<br>
-
-                                <br>
-
-                                <h5 class="text-secondary">DNS informace:</h5>
-                                <strong>DNS Záznamy (A):</strong> {{ item.dns.a|join:", " }}<br>
-                                <strong>DNS Záznamy (AAAA):</strong> {{ item.dns.aaaa|join:", " }}<br>
-                                <strong>CNAME:</strong> {{ item.dns.cname|join:", " }}<br>
-                                <strong>PTR:</strong> {{ item.dns.ptr|join:", " }}<br>
-
-                                <br>
-
-                                <h5 class="text-secondary">Informace o síti:</h5>
-                                <strong>ASN:</strong> {{ item.ip_metadata.asn }}<br>
-                                <strong>ISP:</strong> {{ item.ip_metadata.isp }}<br>
-                                <strong>Organizace:</strong> {{ item.ip_metadata.organization }}<br>
-                                <strong>Město:</strong> {{ item.ip_metadata.city_name }}<br>
-                                <strong>Země:</strong> {{ item.ip_metadata.country_name }}<br>
-                                <strong>Region:</strong> {{ item.ip_metadata.region }}<br>
-                                <strong>Latitude:</strong> {{ item.ip_metadata.location_latitude }}<br>
-                                <strong>PSČ:</strong> {{ item.ip_metadata.postal_code }}<br>
-                                <strong>Longitude:</strong> {{ item.ip_metadata.location_longitude }}<br>
-                            </li>
                             {% endfor %}
                             <hr>
                         {% endif %}
@@ -289,7 +258,7 @@
                             <div class="mt-4 text-start">
                             <h4 class="text-primary">Výsledky:</h4>
                             <div class="row">
-                                {% for item in results.reverse_image.image_results %}
+                                {% for item in results.reverse_image %}
                                     <div class="col-md-6">
                                         <div class="card mb-3">
                                             <div class="card-body">
@@ -376,23 +345,56 @@
 
                         {% if results.shodan_host %}
                             <li class="list-group-item">
-                                <h4><strong class="text-warning" id="shodan_host">SHODAN IP SEARCH</strong></h4>
+                                <h4 class="text-warning" id="shodan_search">🔍 SHODAN IP SEARCH</h4>
                             </li>
-                            {% for item in results.shodan_host.matches %}
-                                <li class="list-group-item">
-                                    <strong>Hostnames: </strong>
-                                    {% for value in item.hostnames %}
-                                    | {{ value }} |
-                                    {% endfor %}
-                                </li>
-                                <li class="list-group-item">
-                                    <strong>IP: </strong>{{ item.ip_str }}
-                                </li>
-                                <li class="list-group-item">
-                                    <strong>Data: </strong>{{ item.data }}
-                                </li>
-                                <br>
+
+                            {% for item in results.shodan_host %}
+                            <li class="list-group-item p-3">
+                                <div class="card shadow-sm border-0">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-primary">
+                                            🌐 Hostitel: <span class="text-danger">{{ item.ip }}</span>
+                                        </h5>
+                                        <p><strong>Port:</strong> {{ item.port }} | <strong>Produkt:</strong> {{ item.product }}</p>
+                                        <p><strong>Web titulek:</strong> {{ item.title }}</p>
+
+                                        <hr>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6 class="text-secondary">🧾 Doménové informace</h6>
+                                                <p><strong>Domény:</strong> {{ item.domains|join:", " }}</p>
+                                                <p><strong>Hostnames:</strong> {{ item.hostnames|join:" | " }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6 class="text-secondary">🔐 SSL certifikát</h6>
+                                                <p><strong>Subject CN:</strong> {{ item.ssl_subject_cn }}</p>
+                                                <p><strong>Issuer CN:</strong> {{ item.ssl_issuer_cn }}</p>
+                                                <p><strong>Platnost:</strong> {{ item.ssl_valid_from }} – {{ item.ssl_valid_to }}</p>
+                                                <p><strong>Expirovaný:</strong> {{ item.ssl_expired }}</p>
+                                                <p><strong>Cipher:</strong> {{ item.ssl_cipher_name }} ({{ item.ssl_version }})</p>
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6 class="text-secondary">🌐 Síť</h6>
+                                                <p><strong>Organizace:</strong> {{ item.org }}</p>
+                                                <p><strong>ISP:</strong> {{ item.isp }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6 class="text-secondary">📍 Geolokace</h6>
+                                                <p><strong>Město:</strong> {{ item.city }}</p>
+                                                <p><strong>Země:</strong> {{ item.country }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
                             {% endfor %}
+                            <hr>
                         {% endif %}
                     </div>
                     </ul>

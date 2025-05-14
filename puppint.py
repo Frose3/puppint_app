@@ -34,13 +34,11 @@ def run_command(command):
 
 def check_superuser():
     if not User.objects.filter(is_superuser=True).exists():
-        print("V databázi není žádný superuser!")
-        create_superuser = input("Chceš ho vytvořit? (y/n): ").strip().lower()
-        if create_superuser == "y":
-            username = input("Zadej uživatelské jméno: ")
-            email = input("Zadej e-mail: ")
-            password = input("Zadej heslo: ")
-            User.objects.create_superuser(username, email, password)
+        print("V databázi není žádný superuser!\n")
+        username = input("Zadej uživatelské jméno: ")
+        email = input("Zadej e-mail: ")
+        password = input("Zadej heslo: ")
+        User.objects.create_superuser(username, email, password)
 
 def main():
 
@@ -49,6 +47,7 @@ def main():
 
     run_command("python manage.py makemigrations app")
     run_command("python manage.py migrate")
+    run_command("python manage.py collectstatic --noinput")
 
     check_superuser()
 

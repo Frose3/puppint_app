@@ -32,6 +32,8 @@
                             <ul class="list-group">
                                 <li class="list-group-item"><strong class="text-info">Jméno:</strong> {{ sockpuppet.fullname }}</li>
                                 <li class="list-group-item"><strong class="text-info">Věk:</strong> {{ sockpuppet.age }}</li>
+                                <li class="list-group-item"><strong class="text-info">Výška:</strong> {{ sockpuppet.height }} cm</li>
+                                <li class="list-group-item"><strong class="text-info">Váha:</strong> {{ sockpuppet.weight }} kg</li>
                                 <li class="list-group-item"><strong class="text-info">Datum narození:</strong> {{ sockpuppet.date_of_birth }}</li>
                                 <li class="list-group-item"><strong class="text-info">Rodné číslo:</strong> {{ sockpuppet.birth_number }}</li>
                                 <li class="list-group-item"><strong class="text-info">Město:</strong> {{ sockpuppet.city }}</li>
@@ -45,7 +47,10 @@
                                 <li class="list-group-item"><strong class="text-info">Profesní životopis: </strong> {{ sockpuppet.work_bio|safe }}</li>
                             </ul>
                             <br>
-                            <a href="{% url 'download_sock' %}" class="btn btn-success mt-3"><strong>📥 Stáhnout JSON</strong></a>
+                            <div class="d-flex justify-content-between">
+                                <a href="{% url 'download_sock' %}" class="btn btn-success mt-3"><strong>📥 Stáhnout JSON</strong></a>
+                                <a href="/admin/app/sockpuppet/" class="btn btn-primary mt-3"><strong>🔧 Upravit</strong></a>
+                            </div>
 
                             <br>
                             <p class="text-center mt-4"><strong class="primary">Email:</strong> Na email se můžete přihlásit na stránce <a href="https://mail.tm/" target="_blank">mail.tm</a></p>
