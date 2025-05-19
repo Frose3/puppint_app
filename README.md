@@ -1,8 +1,6 @@
 # PUPPINT
 
-## Co je to?
-
--------------
+## Co je to PUPPINT?
 
 Puppint je nástroj vytvořený za účelem sjednocení různých nástrojů pro OSINT analýzu a jednoduchou generaci klamavého účtu pomocí umělé inteligence Gemini. 
 Vzhledem k tomu, že většina OSINT nástrojů je určena pro použití mimo EU, byl celý nástroj přizpůsoben českému prostředí.
@@ -18,6 +16,8 @@ evropskému prostředí, do jednotlivých existujících seznamů.
 
 ## Použití
 
+Nejdříve je nutné si samotný nástroj stáhnout pomocí příkazu `git clone https://github.com/Frose3/puppint_app.git`
+
 Ke spuštění nástroje, je doporučeno využití Dockeru. Nástroj lze jednoduše spustit příkazem `docker compose up --build`. Při prvotním spuštěním bude uživatel vyzván k vytvoření super usera k přístupu do admin rozhraní. Po spuštění nástroje a vytvoření superuživatele je nutné přejít na adresu `http://localhost:8000`. Poté můžete nástroj jednoduše využít.
 
 Pro správné fungování všech nástrojů je potřeba, aby uživatel poskytl své API klíče jednotlivých služeb do souboru `api.env`.
@@ -31,8 +31,6 @@ Tento nástroj slouží k generování klamavého účtu pomocí umělé intelig
 Po generaci se klamavý účet uloží do databáze, která je zobrazena  v administrátorském rozhraní, kde je uživatel schopen klamavý účet upravovat. V této databázi je možné uchovávat více klamavých účtů.
 
 ## Nástroje
-
-------
 
 ### IPStack
 **Popis:** IPstack je aplikace sloužící k získání geolokačních dat na základě veřejné IP adresy. 
@@ -105,8 +103,6 @@ Služba Mail.tm umožňuje vytvořit bezplatně dočasnou jednorázovou anonymn�
 **Dokumentace k mail.tm:** https://docs.mail.tm
 
 ## Právní rámec a limity legálního použití nástroje Puppint
-
------------
 
 Nástroj Puppint je určen výhradně pro etické a legální použití v oblasti kybernetické bezpečnosti, výzkumu a vzdělávání. Jakékoliv zneužití tohoto nástroje může být považováno za protiprávní činnost a může mít právní důsledky.
 
