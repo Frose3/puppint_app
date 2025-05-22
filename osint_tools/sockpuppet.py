@@ -140,8 +140,8 @@ def generate_sock():
     full_date = f"{day_of_birth}.{month_of_birth}.{year_of_birth}"
 
     birth_number = generate_birth_num(gender, year_of_birth, month_of_birth, day_of_birth)
-    # password = f"{first_name}{unidecode(surname)}{random.randint(0, 999)}"
-    # email = generate_email(first_name, surname, password)
+    password = f"{first_name}{unidecode(surname)}{random.randint(0, 999)}"
+    email = generate_email(first_name, surname, password)
 
     try:
         bio_prompt = (f"Vytvoř náhodnou biografii pro osobu se jménem {first_name.capitalize()} {surname} s věkem {age} let. Biografie by měla být uvěřitelná. Nesmí se jednat o osobu, která"

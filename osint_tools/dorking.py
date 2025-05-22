@@ -36,17 +36,20 @@ class GoogleDork:
             search = GoogleSearch(params)
             results = search.get_dict()
 
-            data = {
-                "favicon": results["organic_results"]["favicon"],
-                "link": results["organic_results"]["link"],
-                "title": results["organic_results"]["title"],
-                "source": results["organic_results"]["source"],
-                "displayed_link": results["organic_results"]["displayed_link"],
-                "snippet": results["organic_results"]["snippet"],
-                "redirect_link": results["organic_results"]["redirect_link"],
-            }
+            all_data = []
+            for result in results['organic_results']:
+                data = {
+                    "favicon": result["favicon"],
+                    "link": result["link"],
+                    "title": result["title"],
+                    "source": result["source"],
+                    "displayed_link": result["displayed_link"],
+                    "snippet": result["snippet"],
+                    "redirect_link": result["redirect_link"],
+                }
+                all_data.append(data)
+            return all_data
 
-            return data
-
-        except Exception:
+        except Exception as p:
+            print(p)
             return False

@@ -3,7 +3,7 @@
 {% load widget_tweaks %}
 {% block auth %}
 
-    <style>
+    <style xmlns="http://www.w3.org/1999/html">
     .sidebar {
         height: 100vh;
         position: sticky;
@@ -143,13 +143,13 @@
                     {% if results %}
                     <h4 class="text-primary mb-3">Zjištěné údaje:</h4>
                     <ul class="list-group list-group-flush">
-                    <div id="accordion">
                         {% if results.google_dork %}
+{#                            <li class="list-group-item">#}
+                            <h4 class="text-warning" data-bs-toggle="collapse" data-bs-target="#google_dork_collapse" role="button" aria-expanded="false" aria-controls="google_dork_collapse" id="google_dork"><strong>GOOGLE DORKING</strong></h4>
+{#                            </li>#}
+                            <div class="collapse" id="google_dork_collapse">
                             <li class="list-group-item">
-                                <h4><strong class="text-warning" id="google_dork">GOOGLE DORKING</strong></h4>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="mt-4 text-start">
+                            <div class="mt-4 text-start">
                             <h4 class="text-primary">Výsledky:</h4>
                             <div class="row">
                                 {% for item in results.google_dork %}
@@ -180,13 +180,15 @@
                                 {% endfor %}
                             </div>
                         </div>
-                            </li>
+                        </div>
+                        </li>
                             <hr>
                         {% endif %}
                         {% if results.ipstack %}
                             <li class="list-group-item">
-                                <h4><strong class="text-warning" id="ipstack">IPSTACK</strong></h4>
+                                <h4 class="text-warning" data-bs-toggle="collapse" data-bs-target="#ipstack_collapse" role="button" aria-expanded="false" aria-controls="ipstack_collapse" id="ipstack"><strong>IPSTACK</strong></h4>
                             </li>
+                            <div class="collapse" id="ipstack_collapse">
                             <li class="list-group-item">
                                 <strong>IP:</strong> {{ results.ipstack.ip }}<br>
                                 <strong>Země:</strong> {{ results.ipstack.country }}<br>
@@ -197,13 +199,15 @@
                                 <strong>Zeměpisná výška:</strong> {{ results.ipstack.longitude }}<br>
                                 <strong>Jazyk:</strong> {{ results.ipstack.language }}<br>
                             </li>
+                            </div>
                             <hr>
                         {% endif %}
 
                         {% if results.fullhunt %}
                             <li class="list-group-item">
-                                <h4><strong class="text-warning" id="fullhunt">FULLHUNT</strong></h4>
+                                <h4 class="text-warning" data-bs-toggle="collapse" data-bs-target="#fullhunt_collapse" role="button" aria-expanded="false" aria-controls="fullhunt_collapse" id="fullhunt"><strong>FULLHUNT</strong></h4>
                             </li>
+                            <div class="collapse" id="fullhunt_collapse">
                             {% for item in results.fullhunt %}
 
                                 <li class="list-group-item p-3">
@@ -247,13 +251,15 @@
                                     </div>
                                 </li>
                             {% endfor %}
+                            </div>
                             <hr>
                         {% endif %}
 
                         {% if results.reverse_image %}
                             <li class="list-group-item">
-                                <h4><strong class="text-warning" id="rev_img">REVERSE IMAGE SEARCH</strong></h4>
+                                <h4 class="text-warning" data-bs-toggle="collapse" data-bs-target="#reverse_image_collapse" role="button" aria-expanded="false" aria-controls="reverse_image_collapse" id="rev_img"><strong>REVERSE IMAGE SEARCH</strong></h4>
                             </li>
+                        <div class="collapse" id="reverse_image_collapse">
                         <li class="list-group-item">
                             <div class="mt-4 text-start">
                             <h4 class="text-primary">Výsledky:</h4>
@@ -287,13 +293,14 @@
                             </div>
                         </div>
                         </li>
+                        </div>
                         <hr>
                         {% endif %}
                         {% if results.shodan_search %}
                             <li class="list-group-item">
-                                <h4 class="text-warning" id="shodan_search">🔍 SHODAN SERVICE SEARCH</h4>
+                                <h4 class="text-warning" data-bs-toggle="collapse" data-bs-target="#shodan_search_collapse" role="button" aria-expanded="false" aria-controls="shodan_search_collapse" id="shodan_search"><strong>🔍 SHODAN SERVICE SEARCH</strong></h4>
                             </li>
-
+                            <div class="collapse" id="shodan_search_collapse">
                             {% for item in results.shodan_search %}
                             <li class="list-group-item p-3">
                                 <div class="card shadow-sm border-0">
@@ -340,14 +347,15 @@
                                 </div>
                             </li>
                             {% endfor %}
+                            </div>
                             <hr>
                         {% endif %}
 
                         {% if results.shodan_host %}
                             <li class="list-group-item">
-                                <h4 class="text-warning" id="shodan_search">🔍 SHODAN IP SEARCH</h4>
+                                <h4 class="text-warning" data-bs-toggle="collapse" data-bs-target="#shodan_host_collapse" role="button" aria-expanded="false" aria-controls="shodan_host_collapse" id="shodan_search"><strong>🔍 SHODAN IP SEARCH</strong></h4>
                             </li>
-
+                            <div class="collapse" id="shodan_host_collapse">
                             {% for item in results.shodan_host %}
                             <li class="list-group-item p-3">
                                 <div class="card shadow-sm border-0">
@@ -394,9 +402,9 @@
                                 </div>
                             </li>
                             {% endfor %}
+                            </div>
                             <hr>
                         {% endif %}
-                    </div>
                     </ul>
                     <br>
 

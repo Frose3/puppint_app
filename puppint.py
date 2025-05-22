@@ -34,10 +34,10 @@ def run_command(command):
 
 def check_superuser():
     if not User.objects.filter(is_superuser=True).exists():
-        print("V databázi není žádný superuser!\n")
-        username = input("Zadej uživatelské jméno: ")
-        email = input("Zadej e-mail: ")
-        password = input("Zadej heslo: ")
+        username = os.getenv("DJANGO_SUPERUSER_USERNAME", "admin")
+        email = os.getenv("DJANGO_SUPERUSER_EMAIL", "admin@example.com")
+        password = os.getenv("DJANGO_SUPERUSER_PASSWORD", "admin")
+
         User.objects.create_superuser(username, email, password)
 
 def main():

@@ -1,14 +1,13 @@
-version: "3.9"
-
 services:
   puppint:
     build: .
+    environment:
+      - DJANGO_SUPERUSER_USERNAME=admin
+      - DJANGO_SUPERUSER_EMAIL=admin@example.com
+      - DJANGO_SUPERUSER_PASSWORD=admin
     container_name: puppint_app
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app
-      - ./static:/app/static
     env_file:
       - ./api.env
     working_dir: /app

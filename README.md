@@ -18,9 +18,11 @@ evropskému prostředí, do jednotlivých existujících seznamů.
 
 Nejdříve je nutné si samotný nástroj stáhnout pomocí příkazu `git clone https://github.com/Frose3/puppint_app.git`
 
-Ke spuštění nástroje, je doporučeno využití Dockeru. Nástroj lze jednoduše spustit příkazem `docker compose up --build`. Při prvotním spuštěním bude uživatel vyzván k vytvoření super usera k přístupu do admin rozhraní. Po spuštění nástroje a vytvoření superuživatele je nutné přejít na adresu `http://localhost:8000`. Poté můžete nástroj jednoduše využít.
+Ke spuštění nástroje, je doporučeno využití Dockeru. Nástroj lze jednoduše spustit příkazem `docker compose up`. Při prvotním spuštěním bude uživatel vyzván k vytvoření super usera k přístupu do admin rozhraní. Po spuštění nástroje a vytvoření superuživatele je nutné přejít na adresu `http://localhost:8000`. Poté můžete nástroj jednoduše využít.
 
-Pro správné fungování všech nástrojů je potřeba, aby uživatel poskytl své API klíče jednotlivých služeb do souboru `api.env`.
+**Pro správné fungování všech nástrojů je potřeba, aby uživatel poskytl své API klíče jednotlivých služeb do souboru `api.env`.**
+
+Výchozí přihlašovací údaje pro administrátorské rozhraní jsou `admin:admin`. Tyto údaje je možné změnit v souboru `docker-compose.yml` v sekci `environment`, kde jednotlivé údaje můžete změnit, dle potřeby. 
 
 ### Puppint
 Tato část umožňuje využít unifikované nástroje, jako Shodan, Google Dork, FullHunt, a další, které jsou vypsané níže. Uživatel je zde schopen vypsat jednotlivé dotazy a také si vybrat, které z daných služeb chce využít. 
