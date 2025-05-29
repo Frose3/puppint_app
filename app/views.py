@@ -1,5 +1,4 @@
 import json
-import os
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -7,18 +6,10 @@ from django.template import loader
 
 from django.urls import reverse
 
-from app.forms import IPStackForm, FullhuntQueryForm, ReverseForm, ShodanSearchForm, ShodanHostForm, UnifiedForm
-from osint_tools import sockpuppet, ipstack, fullhunt, reverse, shodan_api, dorking
-from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from app.forms import IPStackForm, ReverseForm, ShodanSearchForm, ShodanHostForm, UnifiedForm
+from osint_tools import sockpuppet, ipstack, reverse, shodan_api, dorking, hunter
 from django.core.serializers.json import DjangoJSONEncoder
 import markdown
-
-class SignUp(CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy('login')
-    template_name = 'registration/signup.html'
 
 def index(request):
     template = loader.get_template('index.html')
@@ -74,11 +65,17 @@ def puppint_view(request):
                 try:
                     if ip:
                         results['shodan_host'] = shodan_api.shodan_host(ip)
+                        if results['shodan_host'] is False:
+                            errors.append("Chybí API klíč pro Shodan nebo je neplatný.")
+                            results['shodan_host'] = None
                     else:
                         results['shodan_host'] = None
 
                     if service:
                         results['shodan_search'] = shodan_api.shodan_search(service)
+                        if results['shodan_search'] is False:
+                            errors.append("Chybí API klíč pro Shodan nebo je neplatný.")
+                            results['shodan_search'] = None
                     else:
                         results['shodan_search'] = None
                 except Exception as e:
@@ -91,23 +88,31 @@ def puppint_view(request):
             try:
                 if form.cleaned_data.get('ipstack') and ip:
                     results['ipstack'] = ipstack.ipstack(ip)
+                    if results['ipstack'] is False:
+                        errors.append("Chybí API klíč pro IPStack nebo je neplatný.")
+                        results['ipstack'] = None
                 else:
                     results['ipstack'] = None
             except Exception as e:
                 errors.append(f"IPStack error: {str(e)}")
 
-
             try:
-                if form.cleaned_data.get('fullhunt') and service:
-                    results['fullhunt'] = fullhunt.fullhunt(service)
+                if form.cleaned_data.get('hunter') and service:
+                    results['hunter'] = hunter.hunter(service)
+                    if results['hunter'] is False:
+                        errors.append("Chybí API klíč pro Hunter.io nebo je neplatný.")
+                        results['hunter'] = None
                 else:
-                    results['fullhunt'] = None
+                    results['hunter'] = None
             except Exception as e:
-                errors.append(f"FullHunt error: {str(e)}")
+                errors.append(f"Hunter error: {str(e)}")
 
             try:
                 if form.cleaned_data.get('reverse_image') and image_url:
                     results['reverse_image'] = reverse.reverse_image(image_url)
+                    if results['reverse_image'] is False:
+                        errors.append("Chybí API klíč pro Serpapi nebo je neplatný.")
+                        results['reverse_image'] = None
                 else:
                     results['reverse_image'] = None
             except Exception as e:
@@ -117,6 +122,9 @@ def puppint_view(request):
                 if form.cleaned_data.get('dorking') and any([query, site, intitle, intext]):
                     dork = dorking.GoogleDork(query, site, filetype, intitle, intext)
                     results['google_dork'] = dork.google_dorking()
+                    if results['google_dork'] is False:
+                        errors.append("Chybí API klíč pro Serpapi nebo je neplatný.")
+                        results['google_dork7'] = None
                 else:
                     results['google_dork'] = None
             except Exception as e:

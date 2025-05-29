@@ -6,7 +6,7 @@ class IPStackForm(forms.Form):
 class ReverseForm(forms.Form):
     img_url = forms.CharField(max_length=255, label="Reverse image")
 
-class FullhuntQueryForm(forms.Form):
+class HunterQueryForm(forms.Form):
     query = forms.CharField(max_length=100, label="Hunter query")
 
 class ShodanSearchForm(forms.Form):
@@ -25,10 +25,8 @@ class UnifiedForm(forms.Form):
     intitle = forms.CharField(label="Jaké query má být v názvu", required=False)
     intext = forms.CharField(label="Jaké query má být v textu", required=False)
 
-    # image_file = forms.ImageField(label="Nahrát obrázek", required=False)
-
     shodan = forms.BooleanField(label="Shodan", required=False)
     ipstack = forms.BooleanField(label="IPStack", required=False)
-    fullhunt = forms.BooleanField(label="FullHunt", required=False)
+    hunter = forms.BooleanField(label="Hunter", required=False)
     reverse_image = forms.BooleanField(label="Reverse Image Search", required=False)
     dorking = forms.BooleanField(label="Dorking", required=False)

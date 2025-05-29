@@ -27,5 +27,5 @@ def ipstack(ip):
         }
 
         return data
-    except Exception:
-        return False
+    except Exception as e:
+        return e

@@ -25,7 +25,7 @@ Ke spuštění nástroje, je doporučeno využití Dockeru. Nástroj lze jednodu
 Výchozí přihlašovací údaje pro administrátorské rozhraní jsou `admin:admin`. Tyto údaje je možné změnit v souboru `docker-compose.yml` v sekci `environment`, kde jednotlivé údaje můžete změnit, dle potřeby. 
 
 ### Puppint
-Tato část umožňuje využít unifikované nástroje, jako Shodan, Google Dork, FullHunt, a další, které jsou vypsané níže. Uživatel je zde schopen vypsat jednotlivé dotazy a také si vybrat, které z daných služeb chce využít. 
+Tato část umožňuje využít unifikované nástroje, jako Shodan, Google Dork, Hunter, a další, které jsou vypsané níže. Uživatel je zde schopen vypsat jednotlivé dotazy a také si vybrat, které z daných služeb chce využít. 
 
 ### Sock Puppet
 Tento nástroj slouží k generování klamavého účtu pomocí umělé inteligence Google Gemini. V případě, že by funkce Gemini nebyla funkční, budou použity náhodně vybrané informace ze slovníků k jednotlivým vlastnostem klamavého účtu.
@@ -57,17 +57,14 @@ místa a dalších.
 
 **Použitá API dokumentace:** https://shodan.readthedocs.io/en/latest/
 
-### FullHunt
-**Popis:** FullHunt je nástroj, který automaticky mapuje a hlídá, jaké služby jsou veřejně 
-dostupné z internetu v rámci organizace – jako jsou servery, webové aplikace nebo 
-další služby. Firmám tak umožňuje mít neustálý 
-přehled o tom, jak vypadá jejich viditelná část pro potenciální útočníky.
+### Hunter
+**Popis:** Hunter je nástroj, který vyhledává e-mailové adresy, které jsou přiřazené jednotlivým doménám či organizacím. Nástroj také kontroluje, zda jsou jednotlivé e-mailové adresy stále validní.
 
-- **Kde se zasílá požadavek:** Požadavek je zasílán v souboru `osint_tools/fullhunt.py` ve funkci `fullhunt()` pomocí knihovny `httpx`. Této funkci je nutné předat doménu, která je následně předána do dotazu společně s hlavičkou, do které se předává API klíč.
-  - **Dotaz:** `response = httpx.get(response = httpx.get(f"https://fullhunt.io/api/v1/domain/{user_query}/details", headers=headers), headers=headers)`
-- **Zpracování výsledku:** Všechny výsledky jsou nahrané do proměnné `data`, která je typu slovník. Do této struktury jsou vkládány informace, jako informace o DNS, informace o IP adresse, portech a další.
+- **Kde se zasílá požadavek:** Požadavek je zasílán v souboru `osint_tools/hunter.py` ve funkci `hunter()`. Dotaz je zasílán pomocí knihonvy `requests`. Této funkci je nutné předat doménu, která je následně předána do dotazu společně s API klíčem.
+  - **Dotaz:** `response = requests.get(f"https://api.hunter.io/v2/domain-search?domain={user_query}&api_key={hunter_api_key}")`
+- **Zpracování výsledku:** Výsledky pro informace o doméně jsou nahrané do proměnné `data` a jednotlivé e-mailové adresy jsou po iteraci vloženy do proměnné `emails`. Obě proměnné jsou typu slovník.
 
-**Použitá API dokumentace:** https://api-docs.fullhunt.io/
+**Použitá API dokumentace:** https://hunter.io/api-documentation/v2
 
 ### Google Reverse Image Search a Google Dorking
 **Popis:** Tento nástroj slouží k hledání referencí na uživatelem vložený obrázek. API pro tuto službu poskytuje web *serpapi.com*. Puppint zpracuje uživatelem vloženou URL adresu obrázku, poskytne ji API, které vrátí nalezené reference k danému obrázku. Google Dork využívá stejného poskytovatele API, ale využívá jiný engine.

@@ -29,7 +29,7 @@
     <div class="col-md-3 col-lg-2 sidebar">
             <h4 class="text-warning">🧭 Navigace</h4>
             <a href="#google_dork">Google Dork</a>
-            <a href="#fullhunt">FullHunt</a>
+            <a href="#hunter">Hunter</a>
             <a href="#rev_img">Google Reverse Image Search</a>
             <a href="#shodan_search"> Shodan Search</a>
             <a href="#shodan_host">Shodan IP Search</a>
@@ -109,8 +109,8 @@
                                         <label class="form-check-label ms-2" for="{{ form.ipstack.id_for_label }}">IPStack</label>
                                     </div>
                                     <div class="form-check d-inline-block text-start me-4">
-                                        {{ form.fullhunt|add_class:"form-check-input" }}
-                                        <label class="form-check-label ms-2" for="{{ form.fullhunt.id_for_label }}">FullHunt</label>
+                                        {{ form.hunter|add_class:"form-check-input" }}
+                                        <label class="form-check-label ms-2" for="{{ form.hunter.id_for_label }}">Hunter</label>
                                     </div>
                                     <div class="form-check d-inline-block text-start me-4">
                                         {{ form.reverse_image|add_class:"form-check-input" }}
@@ -129,24 +129,24 @@
                         </form>
                         {% endif %}
 
-                {% if errors %}
-                <h4 class="text-danger">ERRORS</h4>
-                <ul class="list-group">
-                    {% for error in errors %}
-                    <li class="list-group-item">
-                        {{ error }}
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
+                    {% if errors %}
+                        <li class="list-group-item">
+                                <h4 class="text-danger text-center"><strong>⚠️ Chyby při načítání dat:</strong></h4>
+                            </li>
+                        <ul class="list-group list-group-flush">
+                            {% for error in errors %}
+                                <p><li class="list-group-item">{{ error }}</li></p>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
 
                     {% if results %}
                     <h4 class="text-primary mb-3">Zjištěné údaje:</h4>
                     <ul class="list-group list-group-flush">
                         {% if results.google_dork %}
-{#                            <li class="list-group-item">#}
-                            <h4 class="text-warning" data-bs-toggle="collapse" data-bs-target="#google_dork_collapse" role="button" aria-expanded="false" aria-controls="google_dork_collapse" id="google_dork"><strong>GOOGLE DORKING</strong></h4>
-{#                            </li>#}
+                            <li class="list-group-item">
+                                <h4 class="text-warning text-center" data-bs-toggle="collapse" data-bs-target="#google_dork_collapse" role="button" aria-expanded="false" aria-controls="google_dork_collapse" id="google_dork"><strong>GOOGLE DORKING</strong></h4>
+                            </li>
                             <div class="collapse" id="google_dork_collapse">
                             <li class="list-group-item">
                             <div class="mt-4 text-start">
@@ -184,9 +184,10 @@
                         </li>
                             <hr>
                         {% endif %}
+
                         {% if results.ipstack %}
                             <li class="list-group-item">
-                                <h4 class="text-warning" data-bs-toggle="collapse" data-bs-target="#ipstack_collapse" role="button" aria-expanded="false" aria-controls="ipstack_collapse" id="ipstack"><strong>IPSTACK</strong></h4>
+                                <h4 class="text-warning text-center" data-bs-toggle="collapse" data-bs-target="#ipstack_collapse" role="button" aria-expanded="false" aria-controls="ipstack_collapse" id="ipstack"><strong>IPSTACK</strong></h4>
                             </li>
                             <div class="collapse" id="ipstack_collapse">
                             <li class="list-group-item">
@@ -203,61 +204,68 @@
                             <hr>
                         {% endif %}
 
-                        {% if results.fullhunt %}
-                            <li class="list-group-item">
-                                <h4 class="text-warning" data-bs-toggle="collapse" data-bs-target="#fullhunt_collapse" role="button" aria-expanded="false" aria-controls="fullhunt_collapse" id="fullhunt"><strong>FULLHUNT</strong></h4>
-                            </li>
-                            <div class="collapse" id="fullhunt_collapse">
-                            {% for item in results.fullhunt %}
+                        {% if results.hunter %}
+                        <li class="list-group-item">
+                            <h4 class="text-warning text-center" data-bs-toggle="collapse" data-bs-target="#hunter_collapse" role="button" aria-expanded="false" aria-controls="hunter_collapse" id="hunter"><strong>HUNTER</strong></h4>
+                        </li>
+                        <div class="collapse" id="hunter_collapse">
 
+                            <li class="list-group-item p-3">
+                                <div class="card shadow-sm border-0">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-primary">🌐 Informace o doméně</h5>
+                                        <p><strong>Doména:</strong> {{ results.hunter.data.domain }}</p>
+                                        <p><strong>Organizace:</strong> {{ results.hunter.data.organization }}</p>
+                                        <p><strong>Popis:</strong> {{ results.hunter.data.description }}</p>
+                                        <p><strong>Odvětví:</strong> {{ results.hunter.data.industry }}</p>
+                                        <p><strong>Webmail:</strong> {{ results.hunter.data.webmail }}</p>
+                                        <p><strong>Město:</strong> {{ results.hunter.data.city }}</p>
+                                        <p><strong>Země:</strong> {{ results.hunter.data.country }}</p>
+
+                                        <p><strong>Sociální sítě:</strong><br>
+                                            🔗 Twitter: {{ results.hunter.data.twitter }}<br>
+                                            🔗 Facebook: {{ results.hunter.data.facebook }}<br>
+                                            🔗 LinkedIn: {{ results.hunter.data.linkedin }}<br>
+                                            🔗 Instagram: {{ results.hunter.data.instagram }}<br>
+                                            🔗 YouTube: {{ results.hunter.data.youtube }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+
+                                {% if results.hunter.emails %}
+                                <li class="list-group-item p-3">
+                                    <h5 class="text-info text-center" data-bs-toggle="collapse" data-bs-target="#emails_collapse" role="button" aria-expanded="false" aria-controls="emails_collapse" id="emails">📧 Emaily pro doménu {{ results.hunter.data.domain }}</h5>
+                                </li>
+
+                                <div class="collapse" id="emails_collapse">
+                                {% for item in results.hunter.emails %}
                                 <li class="list-group-item p-3">
                                     <div class="card shadow-sm border-0">
                                         <div class="card-body">
-                                            <h5 class="card-title text-primary">
-                                                🖥️ Hostitel: <span class="text-danger">{{ item.host }}</span>
-                                            </h5>
-                                            <p><strong>Doména:</strong> {{ item.domain }}</p>
-                                            <p><strong>IP adresa:</strong> {{ item.ip_address }}</p>
-                                            <p><strong>Stav HTTP:</strong> {{ item.http_status_code }}</p>
-                                            <p><strong>Titulek stránky:</strong> {{ item.http_title }}</p>
-                                            <p><strong>Porty:</strong> {{ item.network_ports|join:", " }}</p>
-                                            <p><strong>Tagy:</strong> {{ item.tags|join:", " }}</p>
-
-                                            <hr>
-
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <h6 class="text-secondary">🌐 DNS informace</h6>
-                                                    <p><strong>A záznamy:</strong> {{ item.dns_a|join:", " }}</p>
-                                                    <p><strong>AAAA záznamy:</strong> {{ item.dns_aaaa|join:", " }}</p>
-                                                    <p><strong>CNAME:</strong> {{ item.dns_cname|join:", " }}</p>
-                                                    <p><strong>PTR:</strong> {{ item.dns_ptr|join:", " }}</p>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                    <h6 class="text-secondary">📡 Informace o síti</h6>
-                                                    <p><strong>ASN:</strong> {{ item.ip_metadata_asn }}</p>
-                                                    <p><strong>ISP:</strong> {{ item.ip_metadata_isp }}</p>
-                                                    <p><strong>Organizace:</strong> {{ item.ip_metadata_organization }}</p>
-                                                    <p><strong>Město:</strong> {{ item.ip_metadata_city_name }}</p>
-                                                    <p><strong>Region:</strong> {{ item.ip_metadata_region }}</p>
-                                                    <p><strong>PSČ:</strong> {{ item.ip_metadata_postal_code }}</p>
-                                                    <p><strong>Země:</strong> {{ item.ip_metadata_country_name }}</p>
-                                                    <p><strong>Latitude:</strong> {{ item.ip_metadata_location_latitude }}</p>
-                                                    <p><strong>Longitude:</strong> {{ item.ip_metadata_location_longitude }}</p>
-                                                </div>
-                                            </div>
+                                            <h5 class="card-title text-primary">📧 E-mail: <span class="text-danger">{{ item.email }}</span></h5>
+                                            <p><strong>Typ:</strong> {{ item.type }}</p>
+                                            <p><strong>Jméno:</strong> {{ item.firstname }} {{ item.lastname }}</p>
+                                            <p><strong>Pozice:</strong> {{ item.position }} | <strong>Oddělení:</strong> {{ item.department }}</p>
+                                            <p><strong>Telefon:</strong> {{ item.phone_number }}</p>
+                                            <p><strong>Validita:</strong> {{ item.valid }}</p>
+                                            <p><strong>Sociální sítě:</strong><br>
+                                                🔗 LinkedIn: {{ item.linkedin }}<br>
+                                                🔗 Twitter: {{ item.twitter }}
+                                            </p>
                                         </div>
                                     </div>
                                 </li>
-                            {% endfor %}
+                                {% endfor %}
+                                {% endif %}
+                            </div>
                             </div>
                             <hr>
                         {% endif %}
 
                         {% if results.reverse_image %}
                             <li class="list-group-item">
-                                <h4 class="text-warning" data-bs-toggle="collapse" data-bs-target="#reverse_image_collapse" role="button" aria-expanded="false" aria-controls="reverse_image_collapse" id="rev_img"><strong>REVERSE IMAGE SEARCH</strong></h4>
+                                <h4 class="text-warning text-center" data-bs-toggle="collapse" data-bs-target="#reverse_image_collapse" role="button" aria-expanded="false" aria-controls="reverse_image_collapse" id="rev_img"><strong>REVERSE IMAGE SEARCH</strong></h4>
                             </li>
                         <div class="collapse" id="reverse_image_collapse">
                         <li class="list-group-item">
@@ -298,7 +306,7 @@
                         {% endif %}
                         {% if results.shodan_search %}
                             <li class="list-group-item">
-                                <h4 class="text-warning" data-bs-toggle="collapse" data-bs-target="#shodan_search_collapse" role="button" aria-expanded="false" aria-controls="shodan_search_collapse" id="shodan_search"><strong>🔍 SHODAN SERVICE SEARCH</strong></h4>
+                                <h4 class="text-warning text-center" data-bs-toggle="collapse" data-bs-target="#shodan_search_collapse" role="button" aria-expanded="false" aria-controls="shodan_search_collapse" id="shodan_search"><strong>🔍 SHODAN SERVICE SEARCH</strong></h4>
                             </li>
                             <div class="collapse" id="shodan_search_collapse">
                             {% for item in results.shodan_search %}
@@ -353,7 +361,7 @@
 
                         {% if results.shodan_host %}
                             <li class="list-group-item">
-                                <h4 class="text-warning" data-bs-toggle="collapse" data-bs-target="#shodan_host_collapse" role="button" aria-expanded="false" aria-controls="shodan_host_collapse" id="shodan_search"><strong>🔍 SHODAN IP SEARCH</strong></h4>
+                                <h4 class="text-warning text-center" data-bs-toggle="collapse" data-bs-target="#shodan_host_collapse" role="button" aria-expanded="false" aria-controls="shodan_host_collapse" id="shodan_search"><strong>🔍 SHODAN IP SEARCH</strong></h4>
                             </li>
                             <div class="collapse" id="shodan_host_collapse">
                             {% for item in results.shodan_host %}

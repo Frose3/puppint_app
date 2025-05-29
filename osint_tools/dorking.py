@@ -50,6 +50,6 @@ class GoogleDork:
                 all_data.append(data)
             return all_data
 
-        except Exception as p:
-            print(p)
-            return False
+        except Exception as e:
+            print(e)
+            return e

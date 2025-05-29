@@ -51,7 +51,7 @@ def shodan_search(user_request):
         return all_data
 
     except shodan.APIError as e:
-        return False
+        return e.value
 
 def shodan_host(user_request):
     try:

@@ -18,18 +18,21 @@ def reverse_image(img_url):
 
         search = GoogleSearch(params)
         results = search.get_dict()
+        all_data = []
+        for result in results['image_results']:
+            data = {
+                "favicon": result["favicon"],
+                "link": result["link"],
+                "title": result["title"],
+                "source": result["source"],
+                "displayed_link": result["displayed_link"],
+                "snippet": result["snippet"],
+                "redirect_link": result["redirect_link"],
+            }
+            all_data.append(data)
 
-        data = {
-            "favicon": results["organic_results"]["favicon"],
-            "link": results["organic_results"]["link"],
-            "title": results["organic_results"]["title"],
-            "source": results["organic_results"]["source"],
-            "displayed_link": results["organic_results"]["displayed_link"],
-            "snippet": results["organic_results"]["snippet"],
-            "redirect_link": results["organic_results"]["redirect_link"],
-        }
-
-        return data
+        return all_data
 
     except Exception as e:
-        return False
+        print(e)
+        return e
