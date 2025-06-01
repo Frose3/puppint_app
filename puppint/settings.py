@@ -22,22 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-
-# Funce pro generování soukromého klíče pro Django
-def get_or_create_secret_key():
-    load_dotenv(dotenv_path="api.env")
-    secret_key = os.getenv("SECRET_KEY")
-    if secret_key:
-        return secret_key
-
-    new_key = get_random_secret_key()
-    with open("api.env", "a") as f:
-        f.write(f"\nSECRET_KEY={new_key}\n")
-    print("SECRET_KEY byl automaticky vygenerován a přidán do api.env")
-    return new_key
-
-
-SECRET_KEY = get_or_create_secret_key()
+load_dotenv(dotenv_path=os.path.join(BASE_DIR, "api.env"))
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
