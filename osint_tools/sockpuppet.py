@@ -1,7 +1,7 @@
 import email
 import os
 
-from google.genai.errors import ClientError
+from google.genai.errors import ClientError, ServerError
 from dotenv import load_dotenv
 from osint_tools.tempmail import Tempmail
 from google import genai
@@ -82,7 +82,7 @@ def generate_sock():
             model="gemini-2.0-flash", contents=f"{surname_prompt}"
         )
         surname = surname_response.text.strip()
-    except ClientError as e:
+    except (ClientError, ServerError) as e:
         print(e)
         if gender == 'male':
             try:
@@ -111,7 +111,7 @@ def generate_sock():
             model="gemini-2.0-flash", contents=f"{height_prompt}"
         )
         height = int(height_response.text.strip())
-    except ClientError as e:
+    except (ClientError, ServerError) as e:
         height = random.randint(156, 200)
 
     try:
@@ -121,7 +121,7 @@ def generate_sock():
             model="gemini-2.0-flash", contents=f"{weight_prompt}"
         )
         weight = int(weight_response.text.strip())
-    except ClientError as e:
+    except (ClientError, ServerError) as e:
         weight = random.randint(60, 110)
 
     card = generate_credit_card('Visa')
@@ -150,7 +150,7 @@ def generate_sock():
             model="gemini-2.0-flash", contents=f"{bio_prompt}"
         )
         bio = bio_response.text
-    except ClientError as e:
+    except (ClientError, ServerError) as e:
         print(e)
         bio = ""
 
@@ -161,7 +161,7 @@ def generate_sock():
             model="gemini-2.0-flash", contents=f"{city_prompt}"
         )
         city = city_response.text
-    except ClientError as e:
+    except (ClientError, ServerError) as e:
         print(e)
         try:
             with open("osint_tools/wordlist_cities.txt", "r", encoding="utf-8") as f:
@@ -178,7 +178,7 @@ def generate_sock():
             model="gemini-2.0-flash", contents=f"{street_address_prompt}"
         )
         street = street_address_response.text
-    except ClientError as e:
+    except (ClientError, ServerError) as e:
         print(e)
         street = ""
 
@@ -189,7 +189,7 @@ def generate_sock():
             model="gemini-2.0-flash", contents=f"{work_bio_prompt}"
         )
         work_bio = work_bio_response.text
-    except ClientError as e:
+    except (ClientError, ServerError) as e:
         print(e)
         work_bio = ""
 
