@@ -9,6 +9,8 @@ def hunter(user_query):
     try:
         load_dotenv(dotenv_path="api.env")
         hunter_api_key = os.getenv("HUNTER_API_KEY")
+        if hunter_api_key == "":
+            return False
 
         response = requests.get(f"https://api.hunter.io/v2/domain-search?domain={user_query}&api_key={hunter_api_key}")
 
