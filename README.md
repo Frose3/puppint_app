@@ -1,4 +1,5 @@
 # PUPPINT
+URL repozitáře: https://github.com/Frose3/puppint_app
 
 ## Co je to PUPPINT?
 
