@@ -24,6 +24,8 @@ Ke spuštění nástroje, je doporučeno využití Dockeru. Nástroj lze jednodu
 
 Výchozí přihlašovací údaje pro administrátorské rozhraní jsou `admin:admin`. Tyto údaje je možné změnit v souboru `docker-compose.yml` v sekci `environment`, kde jednotlivé údaje můžete změnit, dle potřeby. 
 
+**POZNÁMKA**: Současná verze je určena pro platformu Windows. Pro funkčnost na platformě **Linux** je potřeba v souboru `docker-compose.yml` odstranit sekci `volume: - .:/app`.
+
 ### Puppint
 Tato část umožňuje využít unifikované nástroje, jako Shodan, Google Dork, Hunter, a další, které jsou vypsané níže. Uživatel je zde schopen vypsat jednotlivé dotazy a také si vybrat, které z daných služeb chce využít. 
 
